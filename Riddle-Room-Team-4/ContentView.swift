@@ -2,14 +2,30 @@
 //  ContentView.swift
 //  Riddle-Room-Team-4
 //
-//  Created by Abdullah Zahid on 20/7/2026.
+//  Root view — hosts the main tab navigation.
+//  preferredColorScheme is applied here so it covers all tabs.
 //
 
 import SwiftUI
 
 struct ContentView: View {
+
+    // Shared with HomeView's dark mode toggle via @AppStorage
+    @AppStorage("isDarkMode") private var isDarkMode = false
+
     var body: some View {
-        Text("Hello, World!")
+        TabView {
+            HomeView()
+                .tabItem {
+                    Label("Home", systemImage: "house.fill")
+                }
+
+            BrainCircleView()
+                .tabItem {
+                    Label("Brain Circle", systemImage: "brain.head.profile")
+                }
+        }
+        .preferredColorScheme(isDarkMode ? .dark : .light)
     }
 }
 
