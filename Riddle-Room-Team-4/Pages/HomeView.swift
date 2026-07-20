@@ -7,6 +7,18 @@
 
 import SwiftUI
 
+extension Color {
+    init(hex: String) {
+        let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
+        var int: UInt64 = 0
+        Scanner(string: hex).scanHexInt64(&int)
+        let r = Double((int >> 16) & 0xFF) / 255
+        let g = Double((int >> 8) & 0xFF) / 255
+        let b = Double(int & 0xFF) / 255
+        self.init(red: r, green: g, blue: b)
+    }
+}
+
 // MARK: - Home View
 struct HomeView: View {
 
@@ -34,7 +46,7 @@ struct HomeView: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color(.systemGroupedBackground).ignoresSafeArea())
+        .background(Color(hex: "D3BEBA").ignoresSafeArea())
     }
 }
 
@@ -49,7 +61,7 @@ struct TopBarView: View {
             } label: {
                 Image(systemName: "line.3.horizontal")
                     .font(.title2)
-                    .foregroundStyle(.primary)
+                    .foregroundStyle(Color(hex: "51366C"))
             }
 
             Spacer()
@@ -61,7 +73,7 @@ struct TopBarView: View {
                 } label: {
                     Image(systemName: isDarkMode ? "sun.max.fill" : "moon.fill")
                         .font(.title2)
-                        .foregroundStyle(.primary)
+                        .foregroundStyle(Color(hex: "51366C"))
                 }
 
                 // Bell — future: notifications sheet
@@ -69,7 +81,7 @@ struct TopBarView: View {
                 } label: {
                     Image(systemName: "bell")
                         .font(.title2)
-                        .foregroundStyle(.primary)
+                        .foregroundStyle(Color(hex: "51366C"))
                 }
             }
         }
@@ -122,7 +134,7 @@ struct TodayRiddleCard: View {
                             .foregroundStyle(.white)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 12)
-                            .background(Color.indigo)
+                            .background(Color(hex: "51366C"))
                             .clipShape(RoundedRectangle(cornerRadius: 12))
                     }
                     .padding(.top, 6)
@@ -175,7 +187,7 @@ struct StreakCard: View {
                 HStack(spacing: 16) {
 //                    Image(systemName: "flame.fill")
 //                        .font(.system(size: 40))
-//                        .foregroundStyle(.orange)
+//                        .foregroundStyle(Color(hex: "51366C"))
 
                     VStack(alignment: .leading, spacing: 6) {
                         Text("Your Streak")
@@ -191,7 +203,7 @@ struct StreakCard: View {
                     Text("\(streakDays) Days")
                         .font(.headline)
                         .fontWeight(.bold)
-                        .foregroundStyle(.orange)
+                        .foregroundStyle(Color(hex: "51366C"))
                 }
 
                 // Week day progress circles
@@ -199,7 +211,7 @@ struct StreakCard: View {
                     ForEach(Array(weekDays.enumerated()), id: \.offset) { index, day in
                         VStack(spacing: 5) {
                             Circle()
-                                .fill(index < completedCount ? Color.orange : Color(.systemGray5))
+                                .fill(index < completedCount ? Color(hex: "51366C") : Color(.systemGray5))
                                 .frame(width: 30, height: 30)
                                 .overlay {
                                     if index < completedCount {
@@ -235,7 +247,7 @@ struct RiddleCard<Content: View>: View {
         content()
             .padding(16)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(Color(.secondarySystemBackground))
+            .background(Color(hex: "FFF7ED"))
             .clipShape(RoundedRectangle(cornerRadius: 16))
     }
 }
