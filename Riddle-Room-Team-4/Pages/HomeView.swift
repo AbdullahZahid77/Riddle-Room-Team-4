@@ -173,9 +173,9 @@ struct StreakCard: View {
         RiddleCard {
             VStack(spacing: 14) {
                 HStack(spacing: 16) {
-                    Image(systemName: "flame.fill")
-                        .font(.system(size: 40))
-                        .foregroundStyle(.orange)
+//                    Image(systemName: "flame.fill")
+//                        .font(.system(size: 40))
+//                        .foregroundStyle(.orange)
 
                     VStack(alignment: .leading, spacing: 6) {
                         Text("Your Streak")
