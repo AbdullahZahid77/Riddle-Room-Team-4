@@ -6,6 +6,7 @@
 //  preferredColorScheme is applied here so it covers all tabs.
 //
 
+
 import SwiftUI
 
 struct ContentView: View {
@@ -23,6 +24,11 @@ struct ContentView: View {
             BrainCircleView()
                 .tabItem {
                     Label("Brain Circle", systemImage: "brain.head.profile")
+                }
+
+            NotesPage()
+                .tabItem {
+                    Label("Notes", systemImage: "note.text")
                 }
         }
         .preferredColorScheme(isDarkMode ? .dark : .light)
