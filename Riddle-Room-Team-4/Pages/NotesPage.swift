@@ -6,10 +6,15 @@ struct NotesPage: View {
         case difficulty
         case riddle
         case hint
+        case wrong(attempt: Int)
+        case revealAnswer
+        case correct
+        case complete
     }
 
     @State private var page: Page = .start
     @State private var answer = ""
+    @State private var wrongAttempts = 0
 
     var body: some View {
         Group {
@@ -21,23 +26,77 @@ struct NotesPage: View {
             case .difficulty:
                 DifficultyPage(
                     onBack: { page = .start },
-                    onSelectDifficulty: { page = .riddle }
+                    onSelectDifficulty: {
+                        answer = ""
+                        wrongAttempts = 0
+                        page = .riddle
+                    }
                 )
             case .riddle:
                 RiddleQuestionPage(
                     answer: $answer,
                     onBack: { page = .difficulty },
-                    onHint: { page = .hint }
+                    onHint: { page = .hint },
+                    onSubmit: checkAnswer
                 )
             case .hint:
                 RiddleHintPage(
                     onBack: { page = .riddle },
                     onDone: { page = .riddle }
                 )
+            case .wrong(let attempt):
+                RiddleWrongPage(
+                    attempt: attempt,
+                    answer: answer,
+                    onBack: { page = .riddle },
+                    onHint: { page = .hint },
+                    onTryAgain: { page = .riddle }
+                )
+            case .revealAnswer:
+                RiddleRevealAnswerPage(
+                    onBack: { page = .riddle },
+                    onNext: { page = .complete }
+                )
+            case .correct:
+                RiddleCorrectPage(
+                    onBack: { page = .riddle },
+                    onNext: { page = .complete }
+                )
+            case .complete:
+                RiddleCompletePage {
+                    answer = ""
+                    wrongAttempts = 0
+                    page = .start
+                }
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(AppColors.background.ignoresSafeArea())
+    }
+
+    private func checkAnswer() {
+        let cleanedAnswer = normalizedAnswer(answer)
+        let correctAnswers = ["piano", "keyboard"]
+
+        if correctAnswers.contains(cleanedAnswer) {
+            page = .correct
+        } else {
+            wrongAttempts += 1
+            page = wrongAttempts >= 3 ? .revealAnswer : .wrong(attempt: wrongAttempts)
+        }
+    }
+
+    private func normalizedAnswer(_ value: String) -> String {
+        let lowercaseValue = value.lowercased()
+        let lettersAndSpaces = lowercaseValue.map { character in
+            character.isLetter || character.isWhitespace ? character : " "
+        }
+        let words = String(lettersAndSpaces)
+            .split(separator: " ")
+            .map(String.init)
+            .filter { !["a", "an", "the"].contains($0) }
+
+        return words.joined(separator: " ")
     }
 }
 
@@ -196,6 +255,7 @@ private struct RiddleQuestionPage: View {
     @Binding var answer: String
     let onBack: () -> Void
     let onHint: () -> Void
+    let onSubmit: () -> Void
 
     var body: some View {
         VStack(spacing: 0) {
@@ -219,6 +279,8 @@ private struct RiddleQuestionPage: View {
                 TextField("Type your answer...", text: $answer)
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundStyle(AppColors.ink)
+                    .submitLabel(.done)
+                    .onSubmit(onSubmit)
                     .padding(.horizontal, 18)
                     .frame(height: 58)
                     .background(
@@ -247,7 +309,9 @@ private struct RiddleQuestionPage: View {
                 }
                 .buttonStyle(.plain)
 
-                Button {} label: {
+                Button {
+                    onSubmit()
+                } label: {
                     Text("Submit Answer")
                         .font(.system(size: 18, weight: .bold))
                         .foregroundStyle(.white)
@@ -257,6 +321,7 @@ private struct RiddleQuestionPage: View {
                             RoundedRectangle(cornerRadius: 12)
                                 .fill(AppColors.purple)
                         )
+                        .contentShape(RoundedRectangle(cornerRadius: 12))
                 }
                 .buttonStyle(.plain)
                 .padding(.top, 12)
@@ -270,6 +335,308 @@ private struct RiddleQuestionPage: View {
             .padding(.horizontal, 28)
 
             Spacer(minLength: 54)
+        }
+    }
+}
+
+private struct RiddleWrongPage: View {
+    let attempt: Int
+    let answer: String
+    let onBack: () -> Void
+    let onHint: () -> Void
+    let onTryAgain: () -> Void
+
+    var body: some View {
+        VStack(spacing: 0) {
+            HeaderBar(title: "Today's Riddle", onBack: onBack)
+                .padding(.top, 12)
+
+            ProgressPill()
+                .padding(.top, 26)
+                .padding(.horizontal, 82)
+
+            Spacer(minLength: 28)
+
+            VStack(spacing: 14) {
+                Image(systemName: "xmark")
+                    .font(.system(size: 34, weight: .medium))
+                    .foregroundStyle(AppColors.red)
+                    .frame(width: 62, height: 62)
+                    .overlay(Circle().stroke(AppColors.red.opacity(0.55), lineWidth: 2))
+
+                Text("Not quite right.")
+                    .font(.system(size: 24, weight: .bold))
+                    .foregroundStyle(AppColors.ink)
+
+                Text("Try again!")
+                    .font(.system(size: 17, weight: .bold))
+                    .foregroundStyle(AppColors.ink)
+                    .padding(.bottom, 18)
+
+                Text(answer.isEmpty ? "Your answer" : answer)
+                    .font(.system(size: 17, weight: .bold))
+                    .foregroundStyle(AppColors.ink)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal, 20)
+                    .frame(height: 58)
+                    .background(RoundedRectangle(cornerRadius: 12).fill(Color.white))
+                    .overlay(RoundedRectangle(cornerRadius: 12).stroke(AppColors.purple.opacity(0.18), lineWidth: 1.5))
+
+                Button(action: onHint) {
+                    HStack(spacing: 12) {
+                        Image(systemName: "lightbulb")
+                            .font(.title3.weight(.semibold))
+                        Text("Get a hint")
+                            .font(.system(size: 15, weight: .bold))
+                    }
+                    .foregroundStyle(AppColors.purple)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 54)
+                    .background(RoundedRectangle(cornerRadius: 12).stroke(AppColors.purple.opacity(0.16), lineWidth: 1.5))
+                }
+                .buttonStyle(.plain)
+                .padding(.top, 8)
+
+                Button(action: onTryAgain) {
+                    Text("Try Again")
+                        .font(.system(size: 18, weight: .bold))
+                        .foregroundStyle(.white)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 54)
+                        .background(RoundedRectangle(cornerRadius: 12).fill(AppColors.purple))
+                }
+                .buttonStyle(.plain)
+                .padding(.top, 28)
+            }
+            .padding(.horizontal, 28)
+
+            Spacer(minLength: 48)
+        }
+    }
+}
+
+private struct RiddleRevealAnswerPage: View {
+    let onBack: () -> Void
+    let onNext: () -> Void
+
+    var body: some View {
+        VStack(spacing: 0) {
+            HeaderBar(title: "Today's Riddle", onBack: onBack)
+                .padding(.top, 12)
+
+            ProgressPill()
+                .padding(.top, 26)
+                .padding(.horizontal, 82)
+
+            Spacer(minLength: 28)
+
+            VStack(spacing: 12) {
+                Image(systemName: "xmark")
+                    .font(.system(size: 34, weight: .medium))
+                    .foregroundStyle(AppColors.red)
+                    .frame(width: 62, height: 62)
+                    .overlay(Circle().stroke(AppColors.red.opacity(0.55), lineWidth: 2))
+
+                Text("Not quite right.")
+                    .font(.system(size: 24, weight: .bold))
+                    .foregroundStyle(AppColors.ink)
+
+                Text("That's not the answer.")
+                    .font(.system(size: 16, weight: .bold))
+                    .foregroundStyle(AppColors.ink)
+
+                Text("Here is the answer:")
+                    .font(.system(size: 16, weight: .bold))
+                    .foregroundStyle(AppColors.ink)
+                    .padding(.top, 4)
+
+                HStack {
+                    Text("A piano")
+                        .font(.system(size: 17, weight: .bold))
+                        .foregroundStyle(AppColors.green)
+
+                    Spacer()
+
+                    Image(systemName: "pianokeys")
+                        .font(.system(size: 38, weight: .regular))
+                        .foregroundStyle(AppColors.ink)
+                }
+                .padding(.horizontal, 20)
+                .frame(height: 56)
+                .background(RoundedRectangle(cornerRadius: 10).fill(AppColors.green.opacity(0.08)))
+                .overlay(RoundedRectangle(cornerRadius: 10).stroke(AppColors.green.opacity(0.18), lineWidth: 1.5))
+                .padding(.top, 4)
+
+                HStack(spacing: 14) {
+                    Image(systemName: "lightbulb")
+                        .font(.title.weight(.semibold))
+                        .foregroundStyle(AppColors.red)
+
+                    Text("Tip: Think about things\nthat have keys for notes,\nnot for locks!")
+                        .font(.system(size: 15, weight: .bold))
+                        .foregroundStyle(AppColors.ink)
+                        .multilineTextAlignment(.center)
+                        .lineSpacing(4)
+                }
+                .frame(maxWidth: .infinity)
+                .frame(height: 104)
+                .background(RoundedRectangle(cornerRadius: 10).fill(AppColors.red.opacity(0.045)))
+                .overlay(RoundedRectangle(cornerRadius: 10).stroke(AppColors.red.opacity(0.18), lineWidth: 1.5))
+                .padding(.top, 12)
+
+                Button(action: onNext) {
+                    Text("Next Riddle")
+                        .font(.system(size: 18, weight: .bold))
+                        .foregroundStyle(.white)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 54)
+                        .background(RoundedRectangle(cornerRadius: 12).fill(AppColors.purple))
+                }
+                .buttonStyle(.plain)
+                .padding(.top, 18)
+            }
+            .padding(.horizontal, 28)
+
+            Spacer(minLength: 28)
+        }
+    }
+}
+
+private struct RiddleCorrectPage: View {
+    let onBack: () -> Void
+    let onNext: () -> Void
+
+    var body: some View {
+        VStack(spacing: 0) {
+            HeaderBar(title: "Today's Riddle", onBack: onBack)
+                .padding(.top, 12)
+
+            ProgressPill()
+                .padding(.top, 26)
+                .padding(.horizontal, 82)
+
+            Spacer(minLength: 30)
+
+            VStack(spacing: 18) {
+                Image(systemName: "checkmark")
+                    .font(.system(size: 38, weight: .semibold))
+                    .foregroundStyle(.white)
+                    .frame(width: 66, height: 66)
+                    .background(Circle().fill(AppColors.green))
+
+                Image(systemName: "brain.head.profile")
+                    .font(.system(size: 112, weight: .light))
+                    .foregroundStyle(AppColors.orange)
+
+                Text("Great job!")
+                    .font(.system(size: 28, weight: .bold))
+                    .foregroundStyle(AppColors.ink)
+
+                Text("You got it right.")
+                    .font(.system(size: 17, weight: .bold))
+                    .foregroundStyle(AppColors.ink)
+
+                Text("Answer:")
+                    .font(.system(size: 16, weight: .bold))
+                    .foregroundStyle(AppColors.purple)
+                    .padding(.top, 10)
+
+                Text("A piano")
+                    .font(.system(size: 17, weight: .bold))
+                    .foregroundStyle(AppColors.green)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 56)
+                    .background(RoundedRectangle(cornerRadius: 10).fill(AppColors.green.opacity(0.08)))
+                    .overlay(RoundedRectangle(cornerRadius: 10).stroke(AppColors.green.opacity(0.18), lineWidth: 1.5))
+
+                Button(action: onNext) {
+                    Text("Next Riddle")
+                        .font(.system(size: 18, weight: .bold))
+                        .foregroundStyle(.white)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 54)
+                        .background(RoundedRectangle(cornerRadius: 12).fill(AppColors.purple))
+                }
+                .buttonStyle(.plain)
+                .padding(.top, 18)
+            }
+            .padding(.horizontal, 30)
+
+            Spacer(minLength: 26)
+        }
+    }
+}
+
+private struct RiddleCompletePage: View {
+    let onHome: () -> Void
+
+    var body: some View {
+        VStack(spacing: 0) {
+            ZStack {
+                Text("Riddle Complete")
+                    .font(.system(size: 18, weight: .bold))
+                    .foregroundStyle(AppColors.ink)
+
+                HStack {
+                    Image(systemName: "line.3.horizontal")
+                        .font(.title2.weight(.semibold))
+                        .foregroundStyle(AppColors.ink)
+                        .frame(width: 44, height: 44)
+                    Spacer()
+                }
+                .padding(.horizontal, 20)
+            }
+            .frame(height: 48)
+            .padding(.top, 12)
+
+            Spacer(minLength: 38)
+
+            Image(systemName: "brain.head.profile")
+                .font(.system(size: 132, weight: .light))
+                .foregroundStyle(AppColors.orange)
+
+            Text("Well done!")
+                .font(.system(size: 30, weight: .bold))
+                .foregroundStyle(AppColors.ink)
+                .padding(.top, 24)
+
+            Text("You've completed today's riddle.")
+                .font(.system(size: 17, weight: .semibold))
+                .foregroundStyle(AppColors.ink)
+                .padding(.top, 10)
+
+            HStack(spacing: 20) {
+                Image(systemName: "sun.max")
+                    .font(.system(size: 42, weight: .light))
+                    .foregroundStyle(AppColors.orange)
+
+                Text("Come back tomorrow\nfor a new riddle!")
+                    .font(.system(size: 17, weight: .bold))
+                    .foregroundStyle(AppColors.ink)
+                    .lineSpacing(5)
+
+                Spacer()
+            }
+            .padding(.horizontal, 24)
+            .frame(height: 92)
+            .background(RoundedRectangle(cornerRadius: 12).fill(Color.white.opacity(0.42)))
+            .overlay(RoundedRectangle(cornerRadius: 12).stroke(AppColors.ink.opacity(0.12), lineWidth: 1.5))
+            .padding(.horizontal, 28)
+            .padding(.top, 28)
+
+            Spacer(minLength: 28)
+
+            Button(action: onHome) {
+                Text("Back to Home")
+                    .font(.system(size: 18, weight: .bold))
+                    .foregroundStyle(.white)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 54)
+                    .background(RoundedRectangle(cornerRadius: 12).fill(AppColors.purple))
+            }
+            .buttonStyle(.plain)
+            .padding(.horizontal, 30)
+            .padding(.bottom, 36)
         }
     }
 }
@@ -464,6 +831,7 @@ private enum AppColors {
     static let panel = Color(red: 0.965, green: 0.94, blue: 0.98)
     static let orange = Color(red: 0.96, green: 0.61, blue: 0.08)
     static let green = Color(red: 0.22, green: 0.58, blue: 0.33)
+    static let red = Color(red: 0.95, green: 0.33, blue: 0.22)
 }
 
 #Preview {
