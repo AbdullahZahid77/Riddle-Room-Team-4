@@ -26,7 +26,7 @@ struct SetupView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            Spacer(minLength: 48)
+            Spacer()
 
             // Illustration
             ZStack {
@@ -79,7 +79,7 @@ struct SetupView: View {
             .padding(.horizontal, 28)
             .padding(.top, 36)
 
-            Spacer(minLength: 40)
+            Spacer()
 
             // Get started button
             Button {
@@ -92,7 +92,8 @@ struct SetupView: View {
                     .font(.system(size: 18 * fontScale, weight: .bold))
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)
-                    .frame(height: 56)
+                    .frame(minHeight: 56)
+                    .padding(.vertical, 4)
                     .background(
                         username.trimmingCharacters(in: .whitespaces).isEmpty
                             ? Color(hex: "51366C").opacity(0.40)

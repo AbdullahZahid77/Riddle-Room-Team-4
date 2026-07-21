@@ -112,7 +112,7 @@ struct SettingsView: View {
                                 Text("A")
                                     .font(.system(size: 13, weight: .bold))
                                     .foregroundStyle(AppColors.ink.opacity(0.5))
-                                Slider(value: $userData.fontScale, in: 0.8...1.5)
+                                Slider(value: $userData.fontScale, in: 0.8...1.3)
                                     .tint(AppColors.purple)
                                 Text("A")
                                     .font(.system(size: 24, weight: .bold))

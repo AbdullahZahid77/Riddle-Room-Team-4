@@ -48,7 +48,7 @@ struct DifficultyPage: View {
             .padding(.top, 26)
             .padding(.horizontal, 24)
 
-            Spacer(minLength: 24)
+            Spacer()
 
             HStack(spacing: 16) {
                 Image(systemName: "info.circle")
@@ -62,7 +62,8 @@ struct DifficultyPage: View {
                 Spacer()
             }
             .padding(.horizontal, 18)
-            .frame(height: 56)
+            .frame(minHeight: 48)
+            .padding(.vertical, 8)
             .background(
                 RoundedRectangle(cornerRadius: 10)
                     .stroke(AppColors.purple.opacity(0.22), lineWidth: 1.5)

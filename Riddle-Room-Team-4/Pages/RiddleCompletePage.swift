@@ -46,7 +46,7 @@ struct RiddleCompletePage: View {
             .frame(height: 48)
             .padding(.top, 12)
 
-            Spacer(minLength: 38)
+            Spacer()
 
             Image(systemName: "brain.head.profile")
                 .font(.system(size: 132 * fontScale, weight: .light))
@@ -78,25 +78,26 @@ struct RiddleCompletePage: View {
                     .font(.system(size: 17 * fontScale, weight: .bold))
                     .foregroundStyle(AppColors.ink)
                     .lineSpacing(5)
+                    .fixedSize(horizontal: false, vertical: true)
 
                 Spacer()
             }
             .padding(.horizontal, 24)
-            .frame(minHeight: 92)
             .padding(.vertical, 16)
             .background(RoundedRectangle(cornerRadius: 12).fill(Color.white.opacity(0.42)))
             .overlay(RoundedRectangle(cornerRadius: 12).stroke(AppColors.ink.opacity(0.12), lineWidth: 1.5))
             .padding(.horizontal, 28)
             .padding(.top, 28)
 
-            Spacer(minLength: 28)
+            Spacer()
 
             Button(action: onHome) {
                 Text("Back to Home")
                     .font(.system(size: 18 * fontScale, weight: .bold))
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)
-                    .frame(height: 54)
+                    .frame(minHeight: 54)
+                    .padding(.vertical, 4)
                     .background(RoundedRectangle(cornerRadius: 12).fill(AppColors.purple))
             }
             .buttonStyle(.plain)

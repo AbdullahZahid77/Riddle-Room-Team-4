@@ -47,6 +47,7 @@ struct RiddleFlowView: View {
                 RiddleStartPage(
                     currentRiddleNumber: 1,
                     totalRiddles: 1,
+                    onBack: goHome,
                     onBegin: { step = .question }
                 )
 

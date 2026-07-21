@@ -17,7 +17,7 @@ struct RiddleCorrectPage: View {
                 .padding(.top, 26)
                 .padding(.horizontal, 82)
 
-            Spacer(minLength: 30)
+            Spacer()
 
             VStack(spacing: 18) {
                 Image(systemName: "checkmark")
@@ -47,7 +47,8 @@ struct RiddleCorrectPage: View {
                     .font(.system(size: 18 * fontScale, weight: .bold))
                     .foregroundStyle(AppColors.green)
                     .frame(maxWidth: .infinity)
-                    .frame(height: 56)
+                    .frame(minHeight: 56)
+                    .padding(.vertical, 4)
                     .background(RoundedRectangle(cornerRadius: 10).fill(AppColors.green.opacity(0.08)))
                     .overlay(RoundedRectangle(cornerRadius: 10).stroke(AppColors.green.opacity(0.18), lineWidth: 1.5))
 
@@ -56,7 +57,8 @@ struct RiddleCorrectPage: View {
                         .font(.system(size: 18 * fontScale, weight: .bold))
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
-                        .frame(height: 54)
+                        .frame(minHeight: 54)
+                        .padding(.vertical, 4)
                         .background(RoundedRectangle(cornerRadius: 12).fill(AppColors.purple))
                 }
                 .buttonStyle(.plain)
@@ -64,7 +66,7 @@ struct RiddleCorrectPage: View {
             }
             .padding(.horizontal, 30)
 
-            Spacer(minLength: 26)
+            Spacer()
         }
     }
 }

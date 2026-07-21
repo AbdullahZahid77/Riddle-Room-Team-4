@@ -41,7 +41,7 @@ struct DifficultyCard: View {
             }
             .padding(.leading, 24)
             .padding(.trailing, 18)
-            .frame(height: 108)
+            .padding(.vertical, 14)
             .background(
                 RoundedRectangle(cornerRadius: 12)
                     .fill(color.opacity(0.035))

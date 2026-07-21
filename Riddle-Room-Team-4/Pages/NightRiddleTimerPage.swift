@@ -22,7 +22,7 @@ struct NightRiddleTimerPage: View {
                     .padding(.top, 26)
                     .padding(.horizontal, 56)
 
-                Spacer(minLength: 44)
+                Spacer()
 
                 VStack(spacing: 24) {
                     ZStack {
@@ -53,7 +53,8 @@ struct NightRiddleTimerPage: View {
                         .foregroundStyle(AppColors.purple)
                         .monospacedDigit()
                         .frame(maxWidth: .infinity)
-                        .frame(height: 86)
+                        .frame(minHeight: 86)
+                        .padding(.vertical, 4)
                         .background(
                             RoundedRectangle(cornerRadius: 16)
                                 .fill(AppColors.panel)
@@ -65,14 +66,15 @@ struct NightRiddleTimerPage: View {
                 }
                 .padding(.horizontal, 30)
 
-                Spacer(minLength: 46)
+                Spacer()
 
                 Button(action: onStartNightRiddle) {
                     Text(isUnlocked ? "Start Night Riddle" : "Locked until 7 PM")
                         .font(.system(size: 18 * fontScale, weight: .bold))
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
-                        .frame(height: 54)
+                        .frame(minHeight: 54)
+                        .padding(.vertical, 4)
                         .background(
                             RoundedRectangle(cornerRadius: 12)
                                 .fill(isUnlocked ? AppColors.purple : AppColors.purple.opacity(0.42))

@@ -21,7 +21,7 @@ struct RiddleWrongPage: View {
                 .padding(.top, 26)
                 .padding(.horizontal, 82)
 
-            Spacer(minLength: 36)
+            Spacer()
 
             VStack(spacing: 16) {
                 Image(systemName: "xmark")
@@ -47,7 +47,8 @@ struct RiddleWrongPage: View {
                     .foregroundStyle(AppColors.ink)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal, 20)
-                    .frame(height: 58)
+                    .frame(minHeight: 58)
+                    .padding(.vertical, 4)
                     .background(RoundedRectangle(cornerRadius: 12).fill(Color.white))
                     .overlay(RoundedRectangle(cornerRadius: 12).stroke(AppColors.red.opacity(0.25), lineWidth: 1.5))
                     .padding(.top, 6)
@@ -57,7 +58,8 @@ struct RiddleWrongPage: View {
                         .font(.system(size: 18 * fontScale, weight: .bold))
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
-                        .frame(height: 54)
+                        .frame(minHeight: 54)
+                        .padding(.vertical, 4)
                         .background(RoundedRectangle(cornerRadius: 12).fill(AppColors.purple))
                 }
                 .buttonStyle(.plain)
@@ -65,7 +67,7 @@ struct RiddleWrongPage: View {
             }
             .padding(.horizontal, 28)
 
-            Spacer(minLength: 48)
+            Spacer()
         }
     }
 }
