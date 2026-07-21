@@ -2,7 +2,7 @@ import SwiftUI
 
 struct DifficultyPage: View {
     let onBack: () -> Void
-    let onSelectDifficulty: () -> Void
+    let onSelectDifficulty: (RiddleDifficulty) -> Void
 
     var body: some View {
         VStack(spacing: 0) {
@@ -23,7 +23,7 @@ struct DifficultyPage: View {
                     symbol: "star.fill",
                     symbolCount: 1,
                     color: AppColors.green,
-                    action: onSelectDifficulty
+                    action: { onSelectDifficulty(.easy) }
                 )
 
                 DifficultyCard(
@@ -32,7 +32,7 @@ struct DifficultyPage: View {
                     symbol: "star.fill",
                     symbolCount: 2,
                     color: AppColors.orange,
-                    action: onSelectDifficulty
+                    action: { onSelectDifficulty(.medium) }
                 )
 
                 DifficultyCard(
@@ -41,7 +41,7 @@ struct DifficultyPage: View {
                     symbol: "star.fill",
                     symbolCount: 3,
                     color: AppColors.purple,
-                    action: onSelectDifficulty
+                    action: { onSelectDifficulty(.hard) }
                 )
             }
             .padding(.top, 26)
@@ -54,7 +54,7 @@ struct DifficultyPage: View {
                     .font(.title3.weight(.semibold))
                     .foregroundStyle(AppColors.purple)
 
-                Text("You can change this later.")
+                Text("You can change this any time.")
                     .font(.system(size: 14, weight: .bold))
                     .foregroundStyle(AppColors.ink)
 

@@ -1,6 +1,9 @@
 import SwiftUI
 
 struct RiddleHintPage: View {
+    let hint: String
+    let hintNumber: Int
+    let totalHints: Int
     let currentRiddleNumber: Int
     let totalRiddles: Int
     let onBack: () -> Void
@@ -15,35 +18,39 @@ struct RiddleHintPage: View {
                 .padding(.top, 26)
                 .padding(.horizontal, 82)
 
-            Spacer(minLength: 58)
+            Spacer(minLength: 40)
 
-            VStack(spacing: 20) {
+            VStack(spacing: 16) {
                 ZStack {
                     Circle()
                         .fill(AppColors.orange.opacity(0.12))
                         .frame(width: 122, height: 122)
 
                     Image(systemName: "lightbulb.fill")
-                        .font(.system(size: 86, weight: .light))
+                        .font(.system(size: 72, weight: .light))
                         .foregroundStyle(AppColors.orange)
                 }
 
-                Text("Here's a hint!")
-                    .font(.system(size: 28, weight: .bold))
-                    .foregroundStyle(AppColors.ink)
+                VStack(spacing: 4) {
+                    Text("Hint \(hintNumber) of \(totalHints)")
+                        .font(.system(size: 13, weight: .bold))
+                        .foregroundStyle(AppColors.orange.opacity(0.8))
+
+                    Text("Here's a hint!")
+                        .font(.system(size: 26, weight: .bold))
+                        .foregroundStyle(AppColors.ink)
+                }
             }
 
-            Text("I'm something you might\nfind in a music room.")
-                .font(.system(size: 19, weight: .bold))
+            Text(hint)
+                .font(.system(size: 18, weight: .semibold))
                 .foregroundStyle(AppColors.ink)
                 .multilineTextAlignment(.center)
                 .lineSpacing(8)
+                .padding(.horizontal, 24)
+                .padding(.vertical, 28)
                 .frame(maxWidth: .infinity)
-                .frame(height: 124)
-                .background(
-                    RoundedRectangle(cornerRadius: 14)
-                        .fill(AppColors.panel)
-                )
+                .background(RoundedRectangle(cornerRadius: 14).fill(AppColors.panel))
                 .padding(.top, 28)
                 .padding(.horizontal, 30)
 
@@ -55,10 +62,7 @@ struct RiddleHintPage: View {
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)
                     .frame(height: 54)
-                    .background(
-                        RoundedRectangle(cornerRadius: 12)
-                            .fill(AppColors.purple)
-                    )
+                    .background(RoundedRectangle(cornerRadius: 12).fill(AppColors.purple))
             }
             .buttonStyle(.plain)
             .padding(.horizontal, 30)

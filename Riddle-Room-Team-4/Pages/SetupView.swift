@@ -85,6 +85,7 @@ struct SetupView: View {
                 let trimmed = username.trimmingCharacters(in: .whitespaces)
                 guard !trimmed.isEmpty else { return }
                 userData.username = trimmed
+                userData.isSetupComplete = true
             } label: {
                 Text("Get Started")
                     .font(.system(size: 18, weight: .bold))

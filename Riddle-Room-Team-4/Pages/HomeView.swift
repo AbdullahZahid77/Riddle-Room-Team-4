@@ -7,25 +7,36 @@
 
 import SwiftUI
 
+private extension Color {
+    init(hex: String) {
+        let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
+        var int: UInt64 = 0
+        Scanner(string: hex).scanHexInt64(&int)
+        let r = Double((int >> 16) & 0xFF) / 255
+        let g = Double((int >> 8) & 0xFF) / 255
+        let b = Double(int & 0xFF) / 255
+        self.init(red: r, green: g, blue: b)
+    }
+}
+
 // MARK: - Home View
 struct HomeView: View {
 
-    // Persisted dark/light mode preference — shared with ContentView
     @AppStorage("isDarkMode") private var isDarkMode = false
+    @EnvironmentObject var userData: UserData
+    @State private var showingRiddle = false
 
     var body: some View {
         VStack(spacing: 0) {
-            // Top bar: menu + theme toggle + bell
             TopBarView(isDarkMode: $isDarkMode)
                 .padding(.horizontal, 20)
                 .padding(.top, 8)
                 .padding(.bottom, 12)
 
-            // Scrollable cards
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 16) {
-                    GreetingSection()
-                    TodayRiddleCard()
+                    GreetingSection(username: userData.username)
+                    TodayRiddleCard(onStart: { showingRiddle = true })
                     TonightRiddleCard()
                     StreakCard()
                 }
@@ -34,7 +45,10 @@ struct HomeView: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color(.systemGroupedBackground).ignoresSafeArea())
+        .background(Color(hex: "D3BEBA").ignoresSafeArea())
+        .fullScreenCover(isPresented: $showingRiddle) {
+            RiddleFlowView(onDismiss: { showingRiddle = false })
+        }
     }
 }
 
@@ -44,32 +58,29 @@ struct TopBarView: View {
 
     var body: some View {
         HStack {
-            // Hamburger — future: opens side drawer
             Button {
             } label: {
                 Image(systemName: "line.3.horizontal")
                     .font(.title2)
-                    .foregroundStyle(.primary)
+                    .foregroundStyle(Color(hex: "51366C"))
             }
 
             Spacer()
 
             HStack(spacing: 18) {
-                // Toggle light / dark mode
                 Button {
                     isDarkMode.toggle()
                 } label: {
                     Image(systemName: isDarkMode ? "sun.max.fill" : "moon.fill")
                         .font(.title2)
-                        .foregroundStyle(.primary)
+                        .foregroundStyle(Color(hex: "51366C"))
                 }
 
-                // Bell — future: notifications sheet
                 Button {
                 } label: {
                     Image(systemName: "bell")
                         .font(.title2)
-                        .foregroundStyle(.primary)
+                        .foregroundStyle(Color(hex: "51366C"))
                 }
             }
         }
@@ -78,10 +89,12 @@ struct TopBarView: View {
 
 // MARK: - Greeting
 struct GreetingSection: View {
+    let username: String
+
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             HStack(alignment: .center, spacing: 8) {
-                Text("Good morning!")
+                Text("Good morning\(username.isEmpty ? "!" : ", \(username)!")")
                     .font(.largeTitle)
                     .fontWeight(.bold)
                 Image(systemName: "sun.max.fill")
@@ -97,6 +110,8 @@ struct GreetingSection: View {
 
 // MARK: - Today's Riddle Card
 struct TodayRiddleCard: View {
+    let onStart: () -> Void
+
     var body: some View {
         RiddleCard {
             HStack(alignment: .top, spacing: 16) {
@@ -113,16 +128,14 @@ struct TodayRiddleCard: View {
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
 
-                    // Start button — future: navigate to riddle view
-                    Button {
-                    } label: {
+                    Button(action: onStart) {
                         Text("Start Riddle")
                             .font(.subheadline)
                             .fontWeight(.semibold)
                             .foregroundStyle(.white)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 12)
-                            .background(Color.indigo)
+                            .background(Color(hex: "51366C"))
                             .clipShape(RoundedRectangle(cornerRadius: 12))
                     }
                     .padding(.top, 6)
@@ -139,7 +152,7 @@ struct TonightRiddleCard: View {
             HStack(alignment: .center, spacing: 16) {
                 Image(systemName: "moon.stars.fill")
                     .font(.system(size: 40))
-                    .foregroundStyle(.indigo)
+                    .foregroundStyle(Color(hex: "51366C"))
 
                 VStack(alignment: .leading, spacing: 6) {
                     Text("Tonight's Riddle")
@@ -163,20 +176,14 @@ struct TonightRiddleCard: View {
 
 // MARK: - Streak Card
 struct StreakCard: View {
+    @EnvironmentObject var userData: UserData
 
-    // Placeholder data — replace with real model later
-    let streakDays = 5
-    let weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
-    let completedCount = 5
+    private let weekDayLabels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 
     var body: some View {
         RiddleCard {
             VStack(spacing: 14) {
                 HStack(spacing: 16) {
-//                    Image(systemName: "flame.fill")
-//                        .font(.system(size: 40))
-//                        .foregroundStyle(.orange)
-
                     VStack(alignment: .leading, spacing: 6) {
                         Text("Your Streak")
                             .font(.headline)
@@ -188,21 +195,21 @@ struct StreakCard: View {
 
                     Spacer()
 
-                    Text("\(streakDays) Days")
+                    Text("\(userData.streakDays) Days")
                         .font(.headline)
                         .fontWeight(.bold)
-                        .foregroundStyle(.orange)
+                        .foregroundStyle(Color(hex: "51366C"))
                 }
 
-                // Week day progress circles
                 HStack(spacing: 0) {
-                    ForEach(Array(weekDays.enumerated()), id: \.offset) { index, day in
+                    let completion = userData.thisWeekCompletion
+                    ForEach(Array(weekDayLabels.enumerated()), id: \.offset) { index, day in
                         VStack(spacing: 5) {
                             Circle()
-                                .fill(index < completedCount ? Color.orange : Color(.systemGray5))
+                                .fill(completion[index] ? Color(hex: "51366C") : Color(.systemGray5))
                                 .frame(width: 30, height: 30)
                                 .overlay {
-                                    if index < completedCount {
+                                    if completion[index] {
                                         Image(systemName: "checkmark")
                                             .font(.caption2)
                                             .fontWeight(.bold)
@@ -222,8 +229,6 @@ struct StreakCard: View {
 }
 
 // MARK: - Reusable Card Shell
-// Wraps any content in a rounded, background-coloured card.
-// The card height is flexible — it grows with its content.
 struct RiddleCard<Content: View>: View {
     let content: () -> Content
 
@@ -235,11 +240,12 @@ struct RiddleCard<Content: View>: View {
         content()
             .padding(16)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(Color(.secondarySystemBackground))
+            .background(Color(hex: "FFF7ED"))
             .clipShape(RoundedRectangle(cornerRadius: 16))
     }
 }
 
 #Preview {
     HomeView()
+        .environmentObject(UserData())
 }

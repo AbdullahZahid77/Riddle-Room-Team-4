@@ -16,9 +16,13 @@ struct DayProgress: Codable {
 
 class UserData: ObservableObject {
 
-    // Username persisted in UserDefaults, published so views update automatically.
     @Published var username: String {
         didSet { UserDefaults.standard.set(username, forKey: "username") }
+    }
+
+    // Set to true once the user completes setup. Drives the ContentView gate.
+    @Published var isSetupComplete: Bool {
+        didSet { UserDefaults.standard.set(isSetupComplete, forKey: "setupComplete") }
     }
 
     // Daily progress keyed by date string "yyyy-MM-dd".
@@ -33,6 +37,7 @@ class UserData: ObservableObject {
 
     init() {
         self.username = UserDefaults.standard.string(forKey: "username") ?? ""
+        self.isSetupComplete = UserDefaults.standard.bool(forKey: "setupComplete")
         loadProgress()
     }
 
@@ -83,6 +88,21 @@ class UserData: ObservableObject {
         }
 
         return streak
+    }
+
+    // True for each Mon–Sun day of the current week where both riddles are done.
+    var thisWeekCompletion: [Bool] {
+        let calendar = Calendar.current
+        let today = Date()
+        let weekday = calendar.component(.weekday, from: today)  // 1=Sun...7=Sat
+        let daysFromMonday = (weekday + 5) % 7                   // 0=Mon...6=Sun
+
+        return (0..<7).map { i in
+            guard i <= daysFromMonday else { return false }       // future days = not done
+            let offset = i - daysFromMonday
+            let date = calendar.date(byAdding: .day, value: offset, to: today) ?? today
+            return progress[formatter.string(from: date)]?.bothDone ?? false
+        }
     }
 
     // MARK: - Persistence

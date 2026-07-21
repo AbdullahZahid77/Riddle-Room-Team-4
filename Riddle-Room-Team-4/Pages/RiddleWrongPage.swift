@@ -2,12 +2,14 @@ import SwiftUI
 
 struct RiddleWrongPage: View {
     let attempt: Int
+    let maxAttempts: Int
     let answer: String
     let currentRiddleNumber: Int
     let totalRiddles: Int
     let onBack: () -> Void
-    let onHint: () -> Void
     let onTryAgain: () -> Void
+
+    private var attemptsRemaining: Int { maxAttempts - attempt }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -18,9 +20,9 @@ struct RiddleWrongPage: View {
                 .padding(.top, 26)
                 .padding(.horizontal, 82)
 
-            Spacer(minLength: 28)
+            Spacer(minLength: 36)
 
-            VStack(spacing: 14) {
+            VStack(spacing: 16) {
                 Image(systemName: "xmark")
                     .font(.system(size: 34, weight: .medium))
                     .foregroundStyle(AppColors.red)
@@ -31,10 +33,13 @@ struct RiddleWrongPage: View {
                     .font(.system(size: 24, weight: .bold))
                     .foregroundStyle(AppColors.ink)
 
-                Text("Try again!")
-                    .font(.system(size: 17, weight: .bold))
-                    .foregroundStyle(AppColors.ink)
-                    .padding(.bottom, 18)
+                HStack(spacing: 6) {
+                    Image(systemName: "exclamationmark.circle.fill")
+                        .font(.subheadline)
+                    Text("\(attemptsRemaining) attempt\(attemptsRemaining == 1 ? "" : "s") remaining")
+                        .font(.system(size: 14, weight: .bold))
+                }
+                .foregroundStyle(attemptsRemaining == 1 ? AppColors.red : AppColors.orange)
 
                 Text(answer.isEmpty ? "Your answer" : answer)
                     .font(.system(size: 17, weight: .bold))
@@ -43,22 +48,8 @@ struct RiddleWrongPage: View {
                     .padding(.horizontal, 20)
                     .frame(height: 58)
                     .background(RoundedRectangle(cornerRadius: 12).fill(Color.white))
-                    .overlay(RoundedRectangle(cornerRadius: 12).stroke(AppColors.purple.opacity(0.18), lineWidth: 1.5))
-
-                Button(action: onHint) {
-                    HStack(spacing: 12) {
-                        Image(systemName: "lightbulb")
-                            .font(.title3.weight(.semibold))
-                        Text("Get a hint")
-                            .font(.system(size: 15, weight: .bold))
-                    }
-                    .foregroundStyle(AppColors.purple)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 54)
-                    .background(RoundedRectangle(cornerRadius: 12).stroke(AppColors.purple.opacity(0.16), lineWidth: 1.5))
-                }
-                .buttonStyle(.plain)
-                .padding(.top, 8)
+                    .overlay(RoundedRectangle(cornerRadius: 12).stroke(AppColors.red.opacity(0.25), lineWidth: 1.5))
+                    .padding(.top, 6)
 
                 Button(action: onTryAgain) {
                     Text("Try Again")
@@ -69,7 +60,7 @@ struct RiddleWrongPage: View {
                         .background(RoundedRectangle(cornerRadius: 12).fill(AppColors.purple))
                 }
                 .buttonStyle(.plain)
-                .padding(.top, 28)
+                .padding(.top, 12)
             }
             .padding(.horizontal, 28)
 

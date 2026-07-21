@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct RiddleCorrectPage: View {
+    let riddle: Riddle
     let currentRiddleNumber: Int
     let totalRiddles: Int
     let onBack: () -> Void
@@ -36,13 +37,13 @@ struct RiddleCorrectPage: View {
                     .font(.system(size: 17, weight: .bold))
                     .foregroundStyle(AppColors.ink)
 
-                Text("Answer:")
-                    .font(.system(size: 16, weight: .bold))
+                Text("The answer was:")
+                    .font(.system(size: 15, weight: .bold))
                     .foregroundStyle(AppColors.purple)
-                    .padding(.top, 10)
+                    .padding(.top, 8)
 
-                Text("A piano")
-                    .font(.system(size: 17, weight: .bold))
+                Text(riddle.answer.capitalized)
+                    .font(.system(size: 18, weight: .bold))
                     .foregroundStyle(AppColors.green)
                     .frame(maxWidth: .infinity)
                     .frame(height: 56)
@@ -50,7 +51,7 @@ struct RiddleCorrectPage: View {
                     .overlay(RoundedRectangle(cornerRadius: 10).stroke(AppColors.green.opacity(0.18), lineWidth: 1.5))
 
                 Button(action: onNext) {
-                    Text("Next Riddle")
+                    Text("Finish")
                         .font(.system(size: 18, weight: .bold))
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
@@ -58,7 +59,7 @@ struct RiddleCorrectPage: View {
                         .background(RoundedRectangle(cornerRadius: 12).fill(AppColors.purple))
                 }
                 .buttonStyle(.plain)
-                .padding(.top, 18)
+                .padding(.top, 14)
             }
             .padding(.horizontal, 30)
 

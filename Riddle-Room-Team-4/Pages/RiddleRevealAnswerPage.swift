@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct RiddleRevealAnswerPage: View {
+    let riddle: Riddle
     let currentRiddleNumber: Int
     let totalRiddles: Int
     let onBack: () -> Void
@@ -15,9 +16,9 @@ struct RiddleRevealAnswerPage: View {
                 .padding(.top, 26)
                 .padding(.horizontal, 82)
 
-            Spacer(minLength: 28)
+            Spacer(minLength: 24)
 
-            VStack(spacing: 12) {
+            VStack(spacing: 14) {
                 Image(systemName: "xmark")
                     .font(.system(size: 34, weight: .medium))
                     .foregroundStyle(AppColors.red)
@@ -28,51 +29,43 @@ struct RiddleRevealAnswerPage: View {
                     .font(.system(size: 24, weight: .bold))
                     .foregroundStyle(AppColors.ink)
 
-                Text("That's not the answer.")
-                    .font(.system(size: 16, weight: .bold))
-                    .foregroundStyle(AppColors.ink)
+                Text("You've used all your attempts.")
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundStyle(AppColors.ink.opacity(0.7))
 
                 Text("Here is the answer:")
-                    .font(.system(size: 16, weight: .bold))
+                    .font(.system(size: 15, weight: .bold))
                     .foregroundStyle(AppColors.ink)
-                    .padding(.top, 4)
+                    .padding(.top, 6)
 
-                HStack {
-                    Text("A piano")
-                        .font(.system(size: 17, weight: .bold))
-                        .foregroundStyle(AppColors.green)
-
-                    Spacer()
-
-                    Image(systemName: "pianokeys")
-                        .font(.system(size: 38, weight: .regular))
-                        .foregroundStyle(AppColors.ink)
-                }
-                .padding(.horizontal, 20)
-                .frame(height: 56)
-                .background(RoundedRectangle(cornerRadius: 10).fill(AppColors.green.opacity(0.08)))
-                .overlay(RoundedRectangle(cornerRadius: 10).stroke(AppColors.green.opacity(0.18), lineWidth: 1.5))
-                .padding(.top, 4)
+                Text(riddle.answer.capitalized)
+                    .font(.system(size: 18, weight: .bold))
+                    .foregroundStyle(AppColors.green)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal, 20)
+                    .frame(height: 56)
+                    .background(RoundedRectangle(cornerRadius: 10).fill(AppColors.green.opacity(0.08)))
+                    .overlay(RoundedRectangle(cornerRadius: 10).stroke(AppColors.green.opacity(0.18), lineWidth: 1.5))
 
                 HStack(spacing: 14) {
                     Image(systemName: "lightbulb")
-                        .font(.title.weight(.semibold))
-                        .foregroundStyle(AppColors.red)
+                        .font(.title2.weight(.semibold))
+                        .foregroundStyle(AppColors.orange)
 
-                    Text("Tip: Think about things\nthat have keys for notes,\nnot for locks!")
+                    Text("Keep practicing —\nyou'll get it next time!")
                         .font(.system(size: 15, weight: .bold))
                         .foregroundStyle(AppColors.ink)
-                        .multilineTextAlignment(.center)
                         .lineSpacing(4)
                 }
-                .frame(maxWidth: .infinity)
-                .frame(height: 104)
-                .background(RoundedRectangle(cornerRadius: 10).fill(AppColors.red.opacity(0.045)))
-                .overlay(RoundedRectangle(cornerRadius: 10).stroke(AppColors.red.opacity(0.18), lineWidth: 1.5))
-                .padding(.top, 12)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 18)
+                .padding(.vertical, 16)
+                .background(RoundedRectangle(cornerRadius: 10).fill(AppColors.orange.opacity(0.07)))
+                .overlay(RoundedRectangle(cornerRadius: 10).stroke(AppColors.orange.opacity(0.18), lineWidth: 1.5))
+                .padding(.top, 6)
 
                 Button(action: onNext) {
-                    Text("Next Riddle")
+                    Text("See Results")
                         .font(.system(size: 18, weight: .bold))
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
@@ -80,7 +73,7 @@ struct RiddleRevealAnswerPage: View {
                         .background(RoundedRectangle(cornerRadius: 12).fill(AppColors.purple))
                 }
                 .buttonStyle(.plain)
-                .padding(.top, 18)
+                .padding(.top, 14)
             }
             .padding(.horizontal, 28)
 

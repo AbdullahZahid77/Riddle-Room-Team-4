@@ -16,7 +16,7 @@ struct ContentView: View {
 
     var body: some View {
         Group {
-            if userData.username.isEmpty {
+            if !userData.isSetupComplete {
                 SetupView()
             } else {
                 TabView {
