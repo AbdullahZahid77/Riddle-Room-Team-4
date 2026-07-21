@@ -24,11 +24,10 @@ struct RiddleWrongPage: View {
             Spacer()
 
             VStack(spacing: 16) {
-                Image(systemName: "xmark")
-                    .font(.system(size: 34 * fontScale, weight: .medium))
-                    .foregroundStyle(AppColors.red)
-                    .frame(width: 62, height: 62)
-                    .overlay(Circle().stroke(AppColors.red.opacity(0.55), lineWidth: 2))
+                Image("confused")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 120)
 
                 Text("Not quite right.")
                     .font(.system(size: 24 * fontScale, weight: .bold))

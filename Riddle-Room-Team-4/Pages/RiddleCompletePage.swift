@@ -48,9 +48,10 @@ struct RiddleCompletePage: View {
 
             Spacer()
 
-            Image(systemName: "brain.head.profile")
-                .font(.system(size: 132 * fontScale, weight: .light))
-                .foregroundStyle(didSucceed ? AppColors.orange : AppColors.ink.opacity(0.35))
+            Image(didSucceed ? "trophy" : "happy")
+                .resizable()
+                .scaledToFit()
+                .frame(height: 160)
 
             if didSucceed {
                 Text("Well done!")

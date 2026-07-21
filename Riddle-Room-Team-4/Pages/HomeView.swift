@@ -112,6 +112,12 @@ struct GreetingSection: View {
             Text("Ready for today's riddle?")
                 .font(.title3)
                 .foregroundStyle(.secondary)
+
+            Image("happy1")
+                .resizable()
+                .scaledToFit()
+                .frame(maxWidth: .infinity, maxHeight: 150)
+                .padding(.top, 10)
         }
     }
 }

@@ -18,15 +18,10 @@ struct RiddleStartPage: View {
 
             Spacer()
 
-            ZStack {
-                Circle()
-                    .fill(AppColors.orange.opacity(0.08))
-                    .frame(width: 176, height: 176)
-
-                Image(systemName: "brain.head.profile")
-                    .font(.system(size: 104 * fontScale, weight: .light))
-                    .foregroundStyle(AppColors.orange)
-            }
+            Image("happy")
+                .resizable()
+                .scaledToFit()
+                .frame(height: 180)
 
             VStack(spacing: 18) {
                 Text("Let's get started!")
