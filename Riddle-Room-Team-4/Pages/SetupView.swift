@@ -20,6 +20,7 @@ private extension Color {
 }
 
 struct SetupView: View {
+    @EnvironmentObject var userData: UserData
     @State private var username: String = ""
 
     var body: some View {
@@ -81,17 +82,24 @@ struct SetupView: View {
 
             // Get started button
             Button {
-                // Logic will be added later
+                let trimmed = username.trimmingCharacters(in: .whitespaces)
+                guard !trimmed.isEmpty else { return }
+                userData.username = trimmed
             } label: {
                 Text("Get Started")
                     .font(.system(size: 18, weight: .bold))
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)
                     .frame(height: 56)
-                    .background(Color(hex: "51366C"))
+                    .background(
+                        username.trimmingCharacters(in: .whitespaces).isEmpty
+                            ? Color(hex: "51366C").opacity(0.40)
+                            : Color(hex: "51366C")
+                    )
                     .clipShape(RoundedRectangle(cornerRadius: 14))
             }
             .buttonStyle(.plain)
+            .disabled(username.trimmingCharacters(in: .whitespaces).isEmpty)
             .padding(.horizontal, 28)
             .padding(.bottom, 48)
         }

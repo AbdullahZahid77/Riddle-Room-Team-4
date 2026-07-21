@@ -11,25 +11,31 @@ import SwiftUI
 
 struct ContentView: View {
 
-    // Shared with HomeView's dark mode toggle via @AppStorage
     @AppStorage("isDarkMode") private var isDarkMode = false
+    @EnvironmentObject var userData: UserData
 
     var body: some View {
-        TabView {
-            HomeView()
-                .tabItem {
-                    Label("Home", systemImage: "house.fill")
-                }
+        Group {
+            if userData.username.isEmpty {
+                SetupView()
+            } else {
+                TabView {
+                    HomeView()
+                        .tabItem {
+                            Label("Home", systemImage: "house.fill")
+                        }
 
-            BrainCircleView()
-                .tabItem {
-                    Label("Brain Circle", systemImage: "brain.head.profile")
-                }
+                    BrainCircleView()
+                        .tabItem {
+                            Label("Brain Circle", systemImage: "brain.head.profile")
+                        }
 
-            NotesPage()
-                .tabItem {
-                    Label("Notes", systemImage: "note.text")
+                    NotesPage()
+                        .tabItem {
+                            Label("Notes", systemImage: "note.text")
+                        }
                 }
+            }
         }
         .preferredColorScheme(isDarkMode ? .dark : .light)
     }
