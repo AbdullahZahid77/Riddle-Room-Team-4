@@ -11,7 +11,10 @@ enum RiddleStep: Equatable {
 }
 
 struct RiddleFlowView: View {
+    var slot: RiddleSlot = .day
     var onDismiss: (() -> Void)? = nil
+
+    @EnvironmentObject var userData: UserData
 
     @State private var step: RiddleStep = .difficulty
     @State private var currentRiddle = Riddle(
@@ -20,6 +23,7 @@ struct RiddleFlowView: View {
     @State private var answer: String = ""
     @State private var attempts: Int = 0
     @State private var hintsShown: Int = 0
+    @State private var riddleSucceeded: Bool = false
 
     private let maxAttempts = 3
     private let maxHints = 3
@@ -83,7 +87,10 @@ struct RiddleFlowView: View {
                     currentRiddleNumber: 1,
                     totalRiddles: 1,
                     onBack: goHome,
-                    onNext: { step = .complete }
+                    onNext: {
+                        markProgress()
+                        step = .complete
+                    }
                 )
 
             case .correct:
@@ -92,11 +99,15 @@ struct RiddleFlowView: View {
                     currentRiddleNumber: 1,
                     totalRiddles: 1,
                     onBack: goHome,
-                    onNext: { step = .complete }
+                    onNext: {
+                        riddleSucceeded = true
+                        markProgress()
+                        step = .complete
+                    }
                 )
 
             case .complete:
-                RiddleCompletePage(onHome: handleComplete)
+                RiddleCompletePage(slot: slot, didSucceed: riddleSucceeded, onHome: handleComplete)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -104,10 +115,15 @@ struct RiddleFlowView: View {
         .animation(.easeInOut(duration: 0.25), value: step)
     }
 
-    // All back buttons go home (dismiss the cover) when opened from HomeView.
-    // In the Notes tab (onDismiss == nil), back does nothing — that's fine for a tab.
     private func goHome() {
         onDismiss?()
+    }
+
+    private func markProgress() {
+        switch slot {
+        case .day:   userData.markDayRiddle()
+        case .night: userData.markNightRiddle()
+        }
     }
 
     private func evaluateAnswer() {
@@ -128,6 +144,7 @@ struct RiddleFlowView: View {
             answer = ""
             attempts = 0
             hintsShown = 0
+            riddleSucceeded = false
             step = .difficulty
         }
     }

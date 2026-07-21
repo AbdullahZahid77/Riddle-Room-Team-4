@@ -3,6 +3,7 @@ import SwiftUI
 struct DifficultyPage: View {
     let onBack: () -> Void
     let onSelectDifficulty: (RiddleDifficulty) -> Void
+    @Environment(\.appFontScale) var fontScale
 
     var body: some View {
         VStack(spacing: 0) {
@@ -10,7 +11,7 @@ struct DifficultyPage: View {
                 .padding(.top, 12)
 
             Text("Pick a challenge level\nthat's right for you!")
-                .font(.system(size: 20, weight: .bold))
+                .font(.system(size: 20 * fontScale, weight: .bold))
                 .foregroundStyle(AppColors.ink)
                 .multilineTextAlignment(.center)
                 .lineSpacing(7)
@@ -55,7 +56,7 @@ struct DifficultyPage: View {
                     .foregroundStyle(AppColors.purple)
 
                 Text("You can change this any time.")
-                    .font(.system(size: 14, weight: .bold))
+                    .font(.system(size: 14 * fontScale, weight: .bold))
                     .foregroundStyle(AppColors.ink)
 
                 Spacer()

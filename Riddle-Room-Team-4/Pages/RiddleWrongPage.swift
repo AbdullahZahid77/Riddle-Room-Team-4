@@ -8,6 +8,7 @@ struct RiddleWrongPage: View {
     let totalRiddles: Int
     let onBack: () -> Void
     let onTryAgain: () -> Void
+    @Environment(\.appFontScale) var fontScale
 
     private var attemptsRemaining: Int { maxAttempts - attempt }
 
@@ -24,25 +25,25 @@ struct RiddleWrongPage: View {
 
             VStack(spacing: 16) {
                 Image(systemName: "xmark")
-                    .font(.system(size: 34, weight: .medium))
+                    .font(.system(size: 34 * fontScale, weight: .medium))
                     .foregroundStyle(AppColors.red)
                     .frame(width: 62, height: 62)
                     .overlay(Circle().stroke(AppColors.red.opacity(0.55), lineWidth: 2))
 
                 Text("Not quite right.")
-                    .font(.system(size: 24, weight: .bold))
+                    .font(.system(size: 24 * fontScale, weight: .bold))
                     .foregroundStyle(AppColors.ink)
 
                 HStack(spacing: 6) {
                     Image(systemName: "exclamationmark.circle.fill")
                         .font(.subheadline)
                     Text("\(attemptsRemaining) attempt\(attemptsRemaining == 1 ? "" : "s") remaining")
-                        .font(.system(size: 14, weight: .bold))
+                        .font(.system(size: 14 * fontScale, weight: .bold))
                 }
                 .foregroundStyle(attemptsRemaining == 1 ? AppColors.red : AppColors.orange)
 
                 Text(answer.isEmpty ? "Your answer" : answer)
-                    .font(.system(size: 17, weight: .bold))
+                    .font(.system(size: 17 * fontScale, weight: .bold))
                     .foregroundStyle(AppColors.ink)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal, 20)
@@ -53,7 +54,7 @@ struct RiddleWrongPage: View {
 
                 Button(action: onTryAgain) {
                     Text("Try Again")
-                        .font(.system(size: 18, weight: .bold))
+                        .font(.system(size: 18 * fontScale, weight: .bold))
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
                         .frame(height: 54)

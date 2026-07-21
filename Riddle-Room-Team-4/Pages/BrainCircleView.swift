@@ -10,6 +10,7 @@ import UIKit
 
 struct BrainCircleView: View {
     @State private var isShowingCircleCode = false
+    @Environment(\.appFontScale) var fontScale
 
     private let circleCode = "ABX7GQ9"
 
@@ -75,11 +76,11 @@ struct BrainCircleView: View {
 
             VStack(spacing: 14) {
                 Text("Brain Circle")
-                    .font(.system(size: 30, weight: .bold))
+                    .font(.system(size: 30 * fontScale, weight: .bold))
                     .foregroundStyle(.indigo)
 
                 Text("Stay connected with your\nfriends and family while\nexercising your brain together.")
-                    .font(.system(size: 19, weight: .semibold))
+                    .font(.system(size: 19 * fontScale, weight: .semibold))
                     .multilineTextAlignment(.center)
                     .lineSpacing(8)
                     .foregroundStyle(.indigo)
@@ -91,16 +92,16 @@ struct BrainCircleView: View {
         Button(action: action) {
             HStack(spacing: 20) {
                 Image(systemName: "person.3")
-                    .font(.system(size: 42))
+                    .font(.system(size: 42 * fontScale))
                     .foregroundStyle(.indigo)
                     .frame(width: 64)
 
                 VStack(alignment: .leading, spacing: 8) {
                     Text(title)
-                        .font(.system(size: 22, weight: .bold))
+                        .font(.system(size: 22 * fontScale, weight: .bold))
 
                     Text(subtitle)
-                        .font(.system(size: 15, weight: .semibold))
+                        .font(.system(size: 15 * fontScale, weight: .semibold))
                         .lineSpacing(6)
                 }
                 .foregroundStyle(.indigo)
@@ -131,6 +132,7 @@ struct BrainCircleView: View {
 private struct CircleReadyView: View {
     let circleCode: String
     let onBack: () -> Void
+    @Environment(\.appFontScale) var fontScale
 
     var body: some View {
         VStack(spacing: 0) {
@@ -139,12 +141,12 @@ private struct CircleReadyView: View {
             ScrollView(showsIndicators: false) {
                 VStack(spacing: 26) {
                     Image(systemName: "party.popper.fill")
-                        .font(.system(size: 54))
+                        .font(.system(size: 54 * fontScale))
                         .foregroundStyle(.orange)
                         .padding(.top, 8)
 
                     Text("Your Brain Circle\nis ready!")
-                        .font(.system(size: 34, weight: .bold))
+                        .font(.system(size: 34 * fontScale, weight: .bold))
                         .multilineTextAlignment(.center)
                         .lineSpacing(10)
                         .foregroundStyle(.indigo)
@@ -153,7 +155,7 @@ private struct CircleReadyView: View {
                         .padding(.vertical, 4)
 
                     Text("Share this code with your\nfamily and friends.")
-                        .font(.system(size: 24, weight: .bold))
+                        .font(.system(size: 24 * fontScale, weight: .bold))
                         .multilineTextAlignment(.center)
                         .lineSpacing(8)
                         .foregroundStyle(.indigo.opacity(0.75))
@@ -162,7 +164,7 @@ private struct CircleReadyView: View {
 
                     ShareLink(item: "Join my Brain Circle with code: \(circleCode)") {
                         Label("Share Code", systemImage: "square.and.arrow.up")
-                            .font(.system(size: 22, weight: .bold))
+                            .font(.system(size: 22 * fontScale, weight: .bold))
                             .foregroundStyle(.white)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 18)
@@ -171,7 +173,7 @@ private struct CircleReadyView: View {
                     }
 
                     Text("This code will never expire.")
-                        .font(.system(size: 21, weight: .bold))
+                        .font(.system(size: 21 * fontScale, weight: .bold))
                         .foregroundStyle(.indigo.opacity(0.75))
                         .padding(.top, 20)
                 }
@@ -187,7 +189,7 @@ private struct CircleReadyView: View {
         HStack {
             Button(action: onBack) {
                 Image(systemName: "chevron.left")
-                    .font(.system(size: 30, weight: .bold))
+                    .font(.system(size: 30 * fontScale, weight: .bold))
                     .foregroundStyle(.indigo)
             }
 
@@ -196,7 +198,7 @@ private struct CircleReadyView: View {
             Button {
             } label: {
                 Image(systemName: "lightbulb")
-                    .font(.system(size: 30, weight: .semibold))
+                    .font(.system(size: 30 * fontScale, weight: .semibold))
                     .foregroundStyle(.indigo)
             }
         }
@@ -212,12 +214,12 @@ private struct CircleReadyView: View {
             }
 
             Image(systemName: "door.left.hand.open")
-                .font(.system(size: 126))
+                .font(.system(size: 126 * fontScale))
                 .foregroundStyle(.purple)
                 .offset(x: -18)
 
             Image(systemName: "brain.head.profile")
-                .font(.system(size: 76))
+                .font(.system(size: 76 * fontScale))
                 .foregroundStyle(.pink)
                 .offset(x: 32, y: 8)
         }
@@ -228,14 +230,14 @@ private struct CircleReadyView: View {
     private var codeCard: some View {
         VStack(spacing: 6) {
             Text("Circle Code")
-                .font(.system(size: 18, weight: .bold))
+                .font(.system(size: 18 * fontScale, weight: .bold))
                 .foregroundStyle(.indigo.opacity(0.7))
 
             HStack(spacing: 18) {
                 Spacer()
 
                 Text(circleCode)
-                    .font(.system(size: 42, weight: .heavy, design: .rounded))
+                    .font(.system(size: 42 * fontScale, weight: .heavy, design: .rounded))
                     .foregroundStyle(.indigo)
                     .minimumScaleFactor(0.7)
 
@@ -243,7 +245,7 @@ private struct CircleReadyView: View {
                     UIPasteboard.general.string = circleCode
                 } label: {
                     Image(systemName: "doc.on.doc")
-                        .font(.system(size: 30, weight: .bold))
+                        .font(.system(size: 30 * fontScale, weight: .bold))
                         .foregroundStyle(.indigo)
                         .frame(width: 48, height: 48)
                 }

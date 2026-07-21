@@ -22,6 +22,7 @@ private extension Color {
 struct SetupView: View {
     @EnvironmentObject var userData: UserData
     @State private var username: String = ""
+    @Environment(\.appFontScale) var fontScale
 
     var body: some View {
         VStack(spacing: 0) {
@@ -34,19 +35,19 @@ struct SetupView: View {
                     .frame(width: 160, height: 160)
 
                 Image(systemName: "person.crop.circle")
-                    .font(.system(size: 96, weight: .light))
+                    .font(.system(size: 96 * fontScale, weight: .light))
                     .foregroundStyle(Color(hex: "51366C"))
             }
 
             // Welcome text
             VStack(spacing: 10) {
                 Text("Welcome to Riddle Room!")
-                    .font(.system(size: 28, weight: .bold))
+                    .font(.system(size: 28 * fontScale, weight: .bold))
                     .foregroundStyle(Color(hex: "51366C"))
                     .multilineTextAlignment(.center)
 
                 Text("Let's set up your profile.\nWhat should we call you?")
-                    .font(.system(size: 17, weight: .semibold))
+                    .font(.system(size: 17 * fontScale, weight: .semibold))
                     .foregroundStyle(Color(hex: "51366C").opacity(0.70))
                     .multilineTextAlignment(.center)
                     .lineSpacing(6)
@@ -57,11 +58,11 @@ struct SetupView: View {
             // Username card
             VStack(alignment: .leading, spacing: 10) {
                 Text("Your Name")
-                    .font(.system(size: 14, weight: .bold))
+                    .font(.system(size: 14 * fontScale, weight: .bold))
                     .foregroundStyle(Color(hex: "51366C").opacity(0.70))
 
                 TextField("e.g. Margaret", text: $username)
-                    .font(.system(size: 18, weight: .semibold))
+                    .font(.system(size: 18 * fontScale, weight: .semibold))
                     .foregroundStyle(Color(hex: "51366C"))
                     .padding(.horizontal, 16)
                     .frame(height: 56)
@@ -88,7 +89,7 @@ struct SetupView: View {
                 userData.isSetupComplete = true
             } label: {
                 Text("Get Started")
-                    .font(.system(size: 18, weight: .bold))
+                    .font(.system(size: 18 * fontScale, weight: .bold))
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)
                     .frame(height: 56)

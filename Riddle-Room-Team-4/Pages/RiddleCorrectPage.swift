@@ -6,6 +6,7 @@ struct RiddleCorrectPage: View {
     let totalRiddles: Int
     let onBack: () -> Void
     let onNext: () -> Void
+    @Environment(\.appFontScale) var fontScale
 
     var body: some View {
         VStack(spacing: 0) {
@@ -20,30 +21,30 @@ struct RiddleCorrectPage: View {
 
             VStack(spacing: 18) {
                 Image(systemName: "checkmark")
-                    .font(.system(size: 38, weight: .semibold))
+                    .font(.system(size: 38 * fontScale, weight: .semibold))
                     .foregroundStyle(.white)
                     .frame(width: 66, height: 66)
                     .background(Circle().fill(AppColors.green))
 
                 Image(systemName: "brain.head.profile")
-                    .font(.system(size: 112, weight: .light))
+                    .font(.system(size: 112 * fontScale, weight: .light))
                     .foregroundStyle(AppColors.orange)
 
                 Text("Great job!")
-                    .font(.system(size: 28, weight: .bold))
+                    .font(.system(size: 28 * fontScale, weight: .bold))
                     .foregroundStyle(AppColors.ink)
 
                 Text("You got it right.")
-                    .font(.system(size: 17, weight: .bold))
+                    .font(.system(size: 17 * fontScale, weight: .bold))
                     .foregroundStyle(AppColors.ink)
 
                 Text("The answer was:")
-                    .font(.system(size: 15, weight: .bold))
+                    .font(.system(size: 15 * fontScale, weight: .bold))
                     .foregroundStyle(AppColors.purple)
                     .padding(.top, 8)
 
                 Text(riddle.answer.capitalized)
-                    .font(.system(size: 18, weight: .bold))
+                    .font(.system(size: 18 * fontScale, weight: .bold))
                     .foregroundStyle(AppColors.green)
                     .frame(maxWidth: .infinity)
                     .frame(height: 56)
@@ -52,7 +53,7 @@ struct RiddleCorrectPage: View {
 
                 Button(action: onNext) {
                     Text("Finish")
-                        .font(.system(size: 18, weight: .bold))
+                        .font(.system(size: 18 * fontScale, weight: .bold))
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
                         .frame(height: 54)

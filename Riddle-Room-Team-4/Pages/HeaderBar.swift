@@ -3,11 +3,12 @@ import SwiftUI
 struct HeaderBar: View {
     let title: String
     var onBack: (() -> Void)?
+    @Environment(\.appFontScale) var fontScale
 
     var body: some View {
         ZStack {
             Text(title)
-                .font(.system(size: 18, weight: .bold))
+                .font(.system(size: 18 * fontScale, weight: .bold))
                 .foregroundStyle(AppColors.ink)
 
             HStack {

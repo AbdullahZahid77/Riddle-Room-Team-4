@@ -9,3 +9,16 @@ enum AppColors {
     static let green = Color(red: 0.22, green: 0.58, blue: 0.33)
     static let red = Color(red: 0.95, green: 0.33, blue: 0.22)
 }
+
+// MARK: - App-wide font scale environment key
+// Set at root in ContentView; read in every page via @Environment(\.appFontScale).
+struct AppFontScaleKey: EnvironmentKey {
+    static let defaultValue: CGFloat = 1.0
+}
+
+extension EnvironmentValues {
+    var appFontScale: CGFloat {
+        get { self[AppFontScaleKey.self] }
+        set { self[AppFontScaleKey.self] = newValue }
+    }
+}

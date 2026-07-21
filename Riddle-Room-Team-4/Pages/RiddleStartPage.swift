@@ -4,6 +4,7 @@ struct RiddleStartPage: View {
     let currentRiddleNumber: Int
     let totalRiddles: Int
     let onBegin: () -> Void
+    @Environment(\.appFontScale) var fontScale
 
     var body: some View {
         VStack(spacing: 0) {
@@ -22,18 +23,18 @@ struct RiddleStartPage: View {
                     .frame(width: 176, height: 176)
 
                 Image(systemName: "brain.head.profile")
-                    .font(.system(size: 104, weight: .light))
+                    .font(.system(size: 104 * fontScale, weight: .light))
                     .foregroundStyle(AppColors.orange)
             }
             .frame(height: 205)
 
             VStack(spacing: 18) {
                 Text("Let's get started!")
-                    .font(.system(size: 28, weight: .bold))
+                    .font(.system(size: 28 * fontScale, weight: .bold))
                     .foregroundStyle(AppColors.ink)
 
                 Text("Read the riddle carefully and\nthink about the answer.")
-                    .font(.system(size: 18, weight: .semibold))
+                    .font(.system(size: 18 * fontScale, weight: .semibold))
                     .foregroundStyle(AppColors.ink)
                     .multilineTextAlignment(.center)
                     .lineSpacing(7)
@@ -44,7 +45,7 @@ struct RiddleStartPage: View {
 
             Button(action: onBegin) {
                 Text("Begin Riddle")
-                    .font(.system(size: 18, weight: .bold))
+                    .font(.system(size: 18 * fontScale, weight: .bold))
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)
                     .frame(height: 54)

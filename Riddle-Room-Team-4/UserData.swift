@@ -28,6 +28,32 @@ class UserData: ObservableObject {
     // Daily progress keyed by date string "yyyy-MM-dd".
     @Published var progress: [String: DayProgress] = [:]
 
+    // MARK: - Settings
+
+    @Published var isMusicMuted: Bool {
+        didSet { UserDefaults.standard.set(isMusicMuted, forKey: "isMusicMuted") }
+    }
+
+    @Published var sfxVolume: Double {
+        didSet { UserDefaults.standard.set(sfxVolume, forKey: "sfxVolume") }
+    }
+
+    // 0.8 (small) → 1.5 (large). Affects dynamicTypeSize app-wide.
+    @Published var fontScale: Double {
+        didSet { UserDefaults.standard.set(fontScale, forKey: "fontScale") }
+    }
+
+    var dynamicTypeSize: DynamicTypeSize {
+        switch fontScale {
+        case ..<0.9:  return .small
+        case ..<1.0:  return .medium
+        case ..<1.1:  return .large
+        case ..<1.2:  return .xLarge
+        case ..<1.35: return .xxLarge
+        default:      return .xxxLarge
+        }
+    }
+
     private let progressKey = "riddleProgress"
     private let formatter: DateFormatter = {
         let f = DateFormatter()
@@ -38,6 +64,9 @@ class UserData: ObservableObject {
     init() {
         self.username = UserDefaults.standard.string(forKey: "username") ?? ""
         self.isSetupComplete = UserDefaults.standard.bool(forKey: "setupComplete")
+        self.isMusicMuted = UserDefaults.standard.bool(forKey: "isMusicMuted")
+        self.sfxVolume = UserDefaults.standard.object(forKey: "sfxVolume") as? Double ?? 0.8
+        self.fontScale = UserDefaults.standard.object(forKey: "fontScale") as? Double ?? 1.0
         loadProgress()
     }
 
@@ -103,6 +132,18 @@ class UserData: ObservableObject {
             let date = calendar.date(byAdding: .day, value: offset, to: today) ?? today
             return progress[formatter.string(from: date)]?.bothDone ?? false
         }
+    }
+
+    // MARK: - Dev reset
+
+    func resetAll() {
+        UserDefaults.standard.removeObject(forKey: "username")
+        UserDefaults.standard.removeObject(forKey: "setupComplete")
+        UserDefaults.standard.removeObject(forKey: progressKey)
+        username = ""
+        isSetupComplete = false
+        progress = [:]
+        // Settings are intentionally kept after reset
     }
 
     // MARK: - Persistence

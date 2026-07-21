@@ -6,6 +6,7 @@ struct RiddleRevealAnswerPage: View {
     let totalRiddles: Int
     let onBack: () -> Void
     let onNext: () -> Void
+    @Environment(\.appFontScale) var fontScale
 
     var body: some View {
         VStack(spacing: 0) {
@@ -20,26 +21,26 @@ struct RiddleRevealAnswerPage: View {
 
             VStack(spacing: 14) {
                 Image(systemName: "xmark")
-                    .font(.system(size: 34, weight: .medium))
+                    .font(.system(size: 34 * fontScale, weight: .medium))
                     .foregroundStyle(AppColors.red)
                     .frame(width: 62, height: 62)
                     .overlay(Circle().stroke(AppColors.red.opacity(0.55), lineWidth: 2))
 
                 Text("Not quite right.")
-                    .font(.system(size: 24, weight: .bold))
+                    .font(.system(size: 24 * fontScale, weight: .bold))
                     .foregroundStyle(AppColors.ink)
 
                 Text("You've used all your attempts.")
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(.system(size: 16 * fontScale, weight: .semibold))
                     .foregroundStyle(AppColors.ink.opacity(0.7))
 
                 Text("Here is the answer:")
-                    .font(.system(size: 15, weight: .bold))
+                    .font(.system(size: 15 * fontScale, weight: .bold))
                     .foregroundStyle(AppColors.ink)
                     .padding(.top, 6)
 
                 Text(riddle.answer.capitalized)
-                    .font(.system(size: 18, weight: .bold))
+                    .font(.system(size: 18 * fontScale, weight: .bold))
                     .foregroundStyle(AppColors.green)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal, 20)
@@ -53,7 +54,7 @@ struct RiddleRevealAnswerPage: View {
                         .foregroundStyle(AppColors.orange)
 
                     Text("Keep practicing —\nyou'll get it next time!")
-                        .font(.system(size: 15, weight: .bold))
+                        .font(.system(size: 15 * fontScale, weight: .bold))
                         .foregroundStyle(AppColors.ink)
                         .lineSpacing(4)
                 }
@@ -66,7 +67,7 @@ struct RiddleRevealAnswerPage: View {
 
                 Button(action: onNext) {
                     Text("See Results")
-                        .font(.system(size: 18, weight: .bold))
+                        .font(.system(size: 18 * fontScale, weight: .bold))
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
                         .frame(height: 54)

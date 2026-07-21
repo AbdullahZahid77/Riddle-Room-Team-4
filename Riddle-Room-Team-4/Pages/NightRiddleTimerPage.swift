@@ -6,6 +6,7 @@ struct NightRiddleTimerPage: View {
     let unlockHour: Int
     let onStartNightRiddle: () -> Void
     let onBackHome: () -> Void
+    @Environment(\.appFontScale) var fontScale
 
     var body: some View {
         TimelineView(.periodic(from: .now, by: 1)) { context in
@@ -30,25 +31,25 @@ struct NightRiddleTimerPage: View {
                             .frame(width: 150, height: 150)
 
                         Image(systemName: isUnlocked ? "moon.stars.fill" : "clock.fill")
-                            .font(.system(size: 76, weight: .light))
+                            .font(.system(size: 76 * fontScale, weight: .light))
                             .foregroundStyle(isUnlocked ? AppColors.purple : AppColors.orange)
                     }
 
                     VStack(spacing: 12) {
                         Text(isUnlocked ? "Night riddle is ready!" : "Night riddle unlocks at 7 PM")
-                            .font(.system(size: 26, weight: .bold))
+                            .font(.system(size: 26 * fontScale, weight: .bold))
                             .foregroundStyle(AppColors.ink)
                             .multilineTextAlignment(.center)
 
                         Text(isUnlocked ? "Start your second riddle for today." : "Come back tonight for riddle 2 of 2.")
-                            .font(.system(size: 17, weight: .semibold))
+                            .font(.system(size: 17 * fontScale, weight: .semibold))
                             .foregroundStyle(AppColors.ink)
                             .multilineTextAlignment(.center)
                             .lineSpacing(6)
                     }
 
                     Text(formattedTime(remainingSeconds))
-                        .font(.system(size: 42, weight: .bold, design: .rounded))
+                        .font(.system(size: 42 * fontScale, weight: .bold, design: .rounded))
                         .foregroundStyle(AppColors.purple)
                         .monospacedDigit()
                         .frame(maxWidth: .infinity)
@@ -68,7 +69,7 @@ struct NightRiddleTimerPage: View {
 
                 Button(action: onStartNightRiddle) {
                     Text(isUnlocked ? "Start Night Riddle" : "Locked until 7 PM")
-                        .font(.system(size: 18, weight: .bold))
+                        .font(.system(size: 18 * fontScale, weight: .bold))
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
                         .frame(height: 54)
@@ -95,7 +96,6 @@ struct NightRiddleTimerPage: View {
         let hours = totalSeconds / 3600
         let minutes = (totalSeconds % 3600) / 60
         let seconds = totalSeconds % 60
-
         return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
     }
 }

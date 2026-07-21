@@ -1,13 +1,37 @@
 import SwiftUI
 
 struct RiddleCompletePage: View {
+    let slot: RiddleSlot
+    let didSucceed: Bool
     let onHome: () -> Void
+    @Environment(\.appFontScale) var fontScale
+
+    private var nextUpMessage: String {
+        switch slot {
+        case .day:   return "Come back tonight\nfor the night riddle!"
+        case .night: return "Come back tomorrow\nfor a new riddle!"
+        }
+    }
+
+    private var nextUpIcon: String {
+        switch slot {
+        case .day:   return "moon.stars.fill"
+        case .night: return "sun.max.fill"
+        }
+    }
+
+    private var nextUpIconColor: Color {
+        switch slot {
+        case .day:   return .indigo
+        case .night: return .orange
+        }
+    }
 
     var body: some View {
         VStack(spacing: 0) {
             ZStack {
                 Text("Riddle Complete")
-                    .font(.system(size: 18, weight: .bold))
+                    .font(.system(size: 18 * fontScale, weight: .bold))
                     .foregroundStyle(AppColors.ink)
 
                 HStack {
@@ -25,33 +49,41 @@ struct RiddleCompletePage: View {
             Spacer(minLength: 38)
 
             Image(systemName: "brain.head.profile")
-                .font(.system(size: 132, weight: .light))
-                .foregroundStyle(AppColors.orange)
+                .font(.system(size: 132 * fontScale, weight: .light))
+                .foregroundStyle(didSucceed ? AppColors.orange : AppColors.ink.opacity(0.35))
 
-            Text("Well done!")
-                .font(.system(size: 30, weight: .bold))
-                .foregroundStyle(AppColors.ink)
-                .padding(.top, 24)
+            if didSucceed {
+                Text("Well done!")
+                    .font(.system(size: 30 * fontScale, weight: .bold))
+                    .foregroundStyle(AppColors.ink)
+                    .padding(.top, 24)
 
-            Text("You've completed today's riddle.")
-                .font(.system(size: 17, weight: .semibold))
-                .foregroundStyle(AppColors.ink)
-                .padding(.top, 10)
+                Text("You've completed today's riddle.")
+                    .font(.system(size: 17 * fontScale, weight: .semibold))
+                    .foregroundStyle(AppColors.ink)
+                    .padding(.top, 10)
+            } else {
+                Text("Nice try!")
+                    .font(.system(size: 30 * fontScale, weight: .bold))
+                    .foregroundStyle(AppColors.ink)
+                    .padding(.top, 24)
+            }
 
             HStack(spacing: 20) {
-                Image(systemName: "sun.max")
-                    .font(.system(size: 42, weight: .light))
-                    .foregroundStyle(AppColors.orange)
+                Image(systemName: nextUpIcon)
+                    .font(.system(size: 42 * fontScale, weight: .light))
+                    .foregroundStyle(nextUpIconColor)
 
-                Text("Come back tomorrow\nfor a new riddle!")
-                    .font(.system(size: 17, weight: .bold))
+                Text(nextUpMessage)
+                    .font(.system(size: 17 * fontScale, weight: .bold))
                     .foregroundStyle(AppColors.ink)
                     .lineSpacing(5)
 
                 Spacer()
             }
             .padding(.horizontal, 24)
-            .frame(height: 92)
+            .frame(minHeight: 92)
+            .padding(.vertical, 16)
             .background(RoundedRectangle(cornerRadius: 12).fill(Color.white.opacity(0.42)))
             .overlay(RoundedRectangle(cornerRadius: 12).stroke(AppColors.ink.opacity(0.12), lineWidth: 1.5))
             .padding(.horizontal, 28)
@@ -61,7 +93,7 @@ struct RiddleCompletePage: View {
 
             Button(action: onHome) {
                 Text("Back to Home")
-                    .font(.system(size: 18, weight: .bold))
+                    .font(.system(size: 18 * fontScale, weight: .bold))
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)
                     .frame(height: 54)

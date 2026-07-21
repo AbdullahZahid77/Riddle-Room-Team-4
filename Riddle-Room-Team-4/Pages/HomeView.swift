@@ -24,11 +24,12 @@ struct HomeView: View {
 
     @AppStorage("isDarkMode") private var isDarkMode = false
     @EnvironmentObject var userData: UserData
-    @State private var showingRiddle = false
+    @State private var activeSlot: RiddleSlot? = nil
+    @State private var showingSettings = false
 
     var body: some View {
         VStack(spacing: 0) {
-            TopBarView(isDarkMode: $isDarkMode)
+            TopBarView(isDarkMode: $isDarkMode, onSettingsTap: { showingSettings = true })
                 .padding(.horizontal, 20)
                 .padding(.top, 8)
                 .padding(.bottom, 12)
@@ -36,8 +37,8 @@ struct HomeView: View {
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 16) {
                     GreetingSection(username: userData.username)
-                    TodayRiddleCard(onStart: { showingRiddle = true })
-                    TonightRiddleCard()
+                    TodayRiddleCard(onStart: { activeSlot = .day })
+                    TonightRiddleCard(onStart: { activeSlot = .night })
                     StreakCard()
                 }
                 .padding(.horizontal, 20)
@@ -46,8 +47,13 @@ struct HomeView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color(hex: "D3BEBA").ignoresSafeArea())
-        .fullScreenCover(isPresented: $showingRiddle) {
-            RiddleFlowView(onDismiss: { showingRiddle = false })
+        .fullScreenCover(item: $activeSlot) { slot in
+            RiddleFlowView(slot: slot, onDismiss: { activeSlot = nil })
+                .environmentObject(userData)
+        }
+        .sheet(isPresented: $showingSettings) {
+            SettingsView()
+                .environmentObject(userData)
         }
     }
 }
@@ -55,12 +61,14 @@ struct HomeView: View {
 // MARK: - Top Bar
 struct TopBarView: View {
     @Binding var isDarkMode: Bool
+    var onSettingsTap: (() -> Void)? = nil
 
     var body: some View {
         HStack {
             Button {
+                onSettingsTap?()
             } label: {
-                Image(systemName: "line.3.horizontal")
+                Image(systemName: "gearshape.fill")
                     .font(.title2)
                     .foregroundStyle(Color(hex: "51366C"))
             }
@@ -147,9 +155,11 @@ struct TodayRiddleCard: View {
 
 // MARK: - Tonight's Riddle Card
 struct TonightRiddleCard: View {
+    let onStart: () -> Void
+
     var body: some View {
         RiddleCard {
-            HStack(alignment: .center, spacing: 16) {
+            HStack(alignment: .top, spacing: 16) {
                 Image(systemName: "moon.stars.fill")
                     .font(.system(size: 40))
                     .foregroundStyle(Color(hex: "51366C"))
@@ -159,16 +169,22 @@ struct TonightRiddleCard: View {
                         .font(.headline)
                         .fontWeight(.semibold)
 
-                    Text("Unlocks at 6:00 PM")
+                    Text("A riddle to end your day")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
+
+                    Button(action: onStart) {
+                        Text("Start Night Riddle")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                            .foregroundStyle(.white)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 12)
+                            .background(Color(hex: "51366C"))
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                    }
+                    .padding(.top, 6)
                 }
-
-                Spacer()
-
-                Image(systemName: "lock.fill")
-                    .font(.title2)
-                    .foregroundStyle(.secondary)
             }
         }
     }

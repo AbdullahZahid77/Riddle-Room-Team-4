@@ -7,6 +7,7 @@ struct DifficultyCard: View {
     let symbolCount: Int
     let color: Color
     let action: () -> Void
+    @Environment(\.appFontScale) var fontScale
 
     var body: some View {
         Button(action: action) {
@@ -16,17 +17,17 @@ struct DifficultyCard: View {
                         Image(systemName: symbol)
                     }
                 }
-                .font(.system(size: 23, weight: .bold))
+                .font(.system(size: 23 * fontScale, weight: .bold))
                 .foregroundStyle(color)
                 .frame(width: 86, alignment: .leading)
 
                 VStack(alignment: .leading, spacing: 6) {
                     Text(title)
-                        .font(.system(size: 20, weight: .bold))
+                        .font(.system(size: 20 * fontScale, weight: .bold))
                         .foregroundStyle(color)
 
                     Text(subtitle)
-                        .font(.system(size: 15, weight: .semibold))
+                        .font(.system(size: 15 * fontScale, weight: .semibold))
                         .foregroundStyle(AppColors.ink)
                         .lineSpacing(4)
                         .fixedSize(horizontal: false, vertical: true)

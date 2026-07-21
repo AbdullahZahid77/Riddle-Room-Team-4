@@ -12,6 +12,7 @@ struct RiddleQuestionPage: View {
     let onBack: () -> Void
     let onRevealHint: () -> Void
     let onSubmit: () -> Void
+    @Environment(\.appFontScale) var fontScale
 
     private var attemptsRemaining: Int { maxAttempts - attempts }
     private var canGetHint: Bool { shownHints.count < maxHints }
@@ -32,7 +33,7 @@ struct RiddleQuestionPage: View {
                 VStack(spacing: 14) {
                     // Category badge
                     Text(riddle.category)
-                        .font(.system(size: 13, weight: .bold))
+                        .font(.system(size: 13 * fontScale, weight: .bold))
                         .foregroundStyle(AppColors.purple)
                         .padding(.horizontal, 14)
                         .padding(.vertical, 5)
@@ -41,7 +42,7 @@ struct RiddleQuestionPage: View {
                         .frame(maxWidth: .infinity, alignment: .center)
 
                     Text(riddle.question)
-                        .font(.system(size: 24, weight: .bold))
+                        .font(.system(size: 24 * fontScale, weight: .bold))
                         .foregroundStyle(AppColors.ink)
                         .multilineTextAlignment(.center)
                         .lineSpacing(8)
@@ -53,14 +54,14 @@ struct RiddleQuestionPage: View {
                             Image(systemName: "exclamationmark.circle.fill")
                                 .font(.caption.weight(.semibold))
                             Text("\(attemptsRemaining) attempt\(attemptsRemaining == 1 ? "" : "s") remaining")
-                                .font(.system(size: 13, weight: .bold))
+                                .font(.system(size: 13 * fontScale, weight: .bold))
                         }
                         .foregroundStyle(attemptsRemaining == 1 ? AppColors.red : AppColors.orange)
                     }
 
                     // Answer field
                     TextField("Type your answer...", text: $answer)
-                        .font(.system(size: 16, weight: .semibold))
+                        .font(.system(size: 16 * fontScale, weight: .semibold))
                         .foregroundStyle(AppColors.ink)
                         .submitLabel(.done)
                         .onSubmit { if canSubmit { onSubmit() } }
@@ -84,7 +85,7 @@ struct RiddleQuestionPage: View {
                                             .font(.caption.weight(.bold))
                                             .foregroundStyle(AppColors.orange)
                                         Text(hint)
-                                            .font(.system(size: 14, weight: .semibold))
+                                            .font(.system(size: 14 * fontScale, weight: .semibold))
                                             .foregroundStyle(AppColors.ink)
                                             .lineSpacing(4)
                                             .fixedSize(horizontal: false, vertical: true)
@@ -106,7 +107,7 @@ struct RiddleQuestionPage: View {
                             Text(canGetHint
                                  ? "Get a hint (\(maxHints - shownHints.count) left)"
                                  : "No more hints")
-                                .font(.system(size: 15, weight: .bold))
+                                .font(.system(size: 15 * fontScale, weight: .bold))
                         }
                         .foregroundStyle(canGetHint ? AppColors.purple : AppColors.ink.opacity(0.35))
                         .frame(maxWidth: .infinity)
@@ -127,7 +128,7 @@ struct RiddleQuestionPage: View {
                         onSubmit()
                     } label: {
                         Text("Submit Answer")
-                            .font(.system(size: 18, weight: .bold))
+                            .font(.system(size: 18 * fontScale, weight: .bold))
                             .foregroundStyle(.white)
                             .frame(maxWidth: .infinity)
                             .frame(height: 54)

@@ -1,5 +1,10 @@
 import Foundation
 
+enum RiddleSlot: String, Identifiable {
+    case day, night
+    var id: String { rawValue }
+}
+
 struct Riddle: Codable, Identifiable {
     let id: Int
     let question: String
