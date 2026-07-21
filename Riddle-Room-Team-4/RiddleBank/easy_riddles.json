@@ -1,0 +1,246 @@
+{
+    "difficulty": "easy",
+    "totalRiddles": 20,
+    "riddles": [
+        {
+            "id": 1,
+            "question": "What has four fingers and a thumb, but is not living?",
+            "answer": "glove",
+            "difficulty": "easy",
+            "category": "Objects",
+            "hints": [
+                "You wear a pair of these outside in the winter.",
+                "They keep your hands warm.",
+                "They have separate slots for your fingers."
+            ]
+        },
+        {
+            "id": 2,
+            "question": "What has hands but cannot clap? A face but cannot smile?",
+            "answer": "clock",
+            "difficulty": "easy",
+            "category": "Time & Measurement",
+            "hints": [
+                "It helps you keep track of time during the day.",
+                "You might hear it ticking on the living room wall.",
+                "It often sits on a bedside table."
+            ]
+        },
+        {
+            "id": 3,
+            "question": "They come out at night without being called, and are lost in the day without being stolen. What are they?",
+            "answer": "stars",
+            "difficulty": "easy",
+            "category": "Nature",
+            "hints": [
+                "You look up at the night sky to see them.",
+                "They twinkle far out in space.",
+                "They disappear when the sun comes up."
+            ]
+        },
+        {
+            "id": 4,
+            "question": "What is always in front of you, but can’t be seen?",
+            "answer": "future",
+            "difficulty": "easy",
+            "category": "Abstract",
+            "hints": [
+                "It hasn't happened yet.",
+                "Tomorrow is a part of it.",
+                "You walk toward it every single day."
+            ]
+        },
+        {
+            "id": 5,
+            "question": "It has keys, but no locks. It has space, but no room. You can enter, but can’t go inside. What is it?",
+            "answer": "keyboard",
+            "difficulty": "easy",
+            "category": "Technology",
+            "hints": [
+                "You use it when typing on a computer.",
+                "It features a spacebar and letters from A to Z.",
+                "It helps you communicate on a desktop or laptop."
+            ]
+        },
+        {
+            "id": 6,
+            "question": "What has many rings but no fingers?",
+            "answer": "phone",
+            "difficulty": "easy",
+            "category": "Technology",
+            "hints": [
+                "It makes a ringing sound when someone calls you.",
+                "Most people carry one around in their pocket or purse.",
+                "You use it to talk to family and friends."
+            ]
+        },
+        {
+            "id": 7,
+            "question": "What can you break without touching it?",
+            "answer": "promise",
+            "difficulty": "easy",
+            "category": "Abstract",
+            "hints": [
+                "It involves a spoken agreement or your word.",
+                "Breaking it can hurt someone's trust.",
+                "It is made with a statement like 'I swear I will do this.'"
+            ]
+        },
+        {
+            "id": 8,
+            "question": "David’s father has three sons: Snap, Crackle and _____?",
+            "answer": "david",
+            "difficulty": "easy",
+            "category": "Wordplay",
+            "hints": [
+                "Don't let the cereal characters trick you.",
+                "Read the very first word of the question again.",
+                "The father belongs to someone named..."
+            ]
+        },
+        {
+            "id": 9,
+            "question": "I’m not a blanket, yet I cover the ground. What am I?",
+            "answer": "snow",
+            "difficulty": "easy",
+            "category": "Nature",
+            "hints": [
+                "It falls from the clouds during cold winter months.",
+                "It is white, cold, and can be shoveled off a driveway.",
+                "Children love to use it to build snowmen."
+            ]
+        },
+        {
+            "id": 10,
+            "question": "I get wetter the more I dry. What am I?",
+            "answer": "towel",
+            "difficulty": "easy",
+            "category": "Objects",
+            "hints": [
+                "You keep one hanging in the bathroom.",
+                "You use it to dry off after stepping out of the shower.",
+                "It soaks up water from your skin."
+            ]
+        },
+        {
+            "id": 11,
+            "question": "The more you take from me, the bigger I become. What am I?",
+            "answer": "hole",
+            "difficulty": "easy",
+            "category": "Objects",
+            "hints": [
+                "Think about gardening or landscaping work.",
+                "You dig it into the dirt or ground.",
+                "The more earth you scoop out, the larger it gets."
+            ]
+        },
+        {
+            "id": 12,
+            "question": "I have one eye but cannot see. What am I?",
+            "answer": "needle",
+            "difficulty": "easy",
+            "category": "Objects",
+            "hints": [
+                "It is very thin and made of metal.",
+                "It is used alongside thread for sewing clothes or buttons.",
+                "You have to be careful not to poke your finger with its sharp tip."
+            ]
+        },
+        {
+            "id": 13,
+            "question": "You can catch me, but you cannot throw me. What am I?",
+            "answer": "cold",
+            "difficulty": "easy",
+            "category": "Health",
+            "hints": [
+                "It is a common mild illness that brings a runny nose or cough.",
+                "You might catch it from someone sneezing nearby during winter.",
+                "It usually clears up after a week of rest."
+            ]
+        },
+        {
+            "id": 14,
+            "question": "I travel all around the world but stay in one corner. What am I?",
+            "answer": "stamp",
+            "difficulty": "easy",
+            "category": "Objects",
+            "hints": [
+                "You need it to mail a traditional paper letter.",
+                "You moisten the back or peel it to stick it down.",
+                "It always goes in the top right part of an envelope."
+            ]
+        },
+        {
+            "id": 15,
+            "question": "The more I have, the less you see. I am…",
+            "answer": "darkness",
+            "difficulty": "easy",
+            "category": "Abstract",
+            "hints": [
+                "It happens naturally every night when the sun goes down.",
+                "You experience it when you turn off all the bedside lamps.",
+                "It makes it hard to read a book without a light on."
+            ]
+        },
+        {
+            "id": 16,
+            "question": "I follow you during the day but disappear at night. What am I?",
+            "answer": "shadow",
+            "difficulty": "easy",
+            "category": "Nature",
+            "hints": [
+                "It is created on the ground when you block the sunlight.",
+                "It mimics your movements as you walk outside.",
+                "When the sun goes away, it vanishes too."
+            ]
+        },
+        {
+            "id": 17,
+            "question": "You use me to unlock knowledge instead of doors",
+            "answer": "book",
+            "difficulty": "easy",
+            "category": "Objects",
+            "hints": [
+                "It has a front cover, a back cover, and many paper pages.",
+                "You might read one by your favorite author in an armchair.",
+                "It can take you on an adventure or teach you history."
+            ]
+        },
+        {
+            "id": 18,
+            "question": "What has a head but no brain",
+            "answer": "lettuce",
+            "difficulty": "easy",
+            "category": "Food",
+            "hints": [
+                "You buy it at the grocery store produce section.",
+                "It is leafy, green, and crisp.",
+                "It is the main ingredient in a garden salad."
+            ]
+        },
+        {
+            "id": 19,
+            "question": "I have a neck but no head, I have two arms, but no hands. What am I?",
+            "answer": "shirt",
+            "difficulty": "easy",
+            "category": "Clothing",
+            "hints": [
+                "It is a common item found in your closet or dresser drawer.",
+                "You put it on your upper body every morning.",
+                "It has sleeves that cover your arms."
+            ]
+        },
+        {
+            "id": 20,
+            "question": "What gets smaller every time it takes a bath?",
+            "answer": "soap",
+            "difficulty": "easy",
+            "category": "Objects",
+            "hints": [
+                "You keep it by the sink or in the shower.",
+                "It creates lather and bubbles to clean your hands.",
+                "Over weeks of washing, the bar slowly wears away."
+            ]
+        }
+    ]
+}
