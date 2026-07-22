@@ -91,27 +91,57 @@ struct BrainCircleView: View {
 
     private var circleListView: some View {
         VStack(spacing: 0) {
-            // Top bar
-            HStack {
-                Text("Brain Circle")
-                    .font(.system(size: 24 * fontScale, weight: .bold))
-                    .foregroundStyle(AppColors.ink)
-                Spacer()
-                Button { showingJoin = true } label: {
-                    Image(systemName: "person.badge.plus")
-                        .font(.title2)
-                        .foregroundStyle(AppColors.purple)
-                }
+            // Title
+            Text("Brain Circle")
+                .font(.system(size: 28 * fontScale, weight: .bold))
+                .foregroundStyle(AppColors.ink)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 24)
+                .padding(.top, 20)
+                .padding(.bottom, 14)
+
+            // Action buttons
+            HStack(spacing: 12) {
                 Button { showingStart = true } label: {
-                    Image(systemName: "plus.circle.fill")
-                        .font(.title2)
-                        .foregroundStyle(AppColors.purple)
+                    VStack(spacing: 8) {
+                        Image(systemName: "plus.circle.fill")
+                            .font(.system(size: 26, weight: .semibold))
+                            .foregroundStyle(AppColors.purple)
+                        Text("Start a Circle")
+                            .font(.system(size: 14 * fontScale, weight: .bold))
+                            .foregroundStyle(AppColors.ink)
+                        Text("Create & invite others")
+                            .font(.system(size: 11 * fontScale, weight: .semibold))
+                            .foregroundStyle(AppColors.ink.opacity(0.55))
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 18)
+                    .background(RoundedRectangle(cornerRadius: 14).fill(AppColors.panel))
+                    .overlay(RoundedRectangle(cornerRadius: 14).stroke(AppColors.purple.opacity(0.15), lineWidth: 1.5))
                 }
-                .padding(.leading, 12)
+                .buttonStyle(.plain)
+
+                Button { showingJoin = true } label: {
+                    VStack(spacing: 8) {
+                        Image(systemName: "person.badge.plus")
+                            .font(.system(size: 26, weight: .semibold))
+                            .foregroundStyle(AppColors.purple)
+                        Text("Join a Circle")
+                            .font(.system(size: 14 * fontScale, weight: .bold))
+                            .foregroundStyle(AppColors.ink)
+                        Text("Enter an invite code")
+                            .font(.system(size: 11 * fontScale, weight: .semibold))
+                            .foregroundStyle(AppColors.ink.opacity(0.55))
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 18)
+                    .background(RoundedRectangle(cornerRadius: 14).fill(AppColors.panel))
+                    .overlay(RoundedRectangle(cornerRadius: 14).stroke(AppColors.purple.opacity(0.15), lineWidth: 1.5))
+                }
+                .buttonStyle(.plain)
             }
-            .padding(.horizontal, 24)
-            .padding(.top, 20)
-            .padding(.bottom, 14)
+            .padding(.horizontal, 20)
+            .padding(.bottom, 16)
 
             ScrollView(showsIndicators: false) {
                 VStack(spacing: 12) {
