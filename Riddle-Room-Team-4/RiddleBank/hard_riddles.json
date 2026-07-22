@@ -1,0 +1,138 @@
+{
+    "difficulty": "hard",
+    "totalRiddles": 11,
+    "riddles": [
+        {
+            "id": 1,
+            "question": "Poor people have it. Rich people need it. If you eat it you die. What is it?",
+            "answer": "nothing",
+            "difficulty": "hard",
+            "category": "Wordplay",
+            "hints": [
+                "It represents a total absence of anything at all.",
+                "Wealthy individuals already have everything, so they lack this concept.",
+                "It is a clever play on words regarding physical sustenance."
+            ]
+        },
+        {
+            "id": 2,
+            "question": "When you stop to look, you can always see me. But if you try to touch me, you can never feel me. Although you walk towards me, I remain the same distance from you. What am I?",
+            "answer": "horizon",
+            "difficulty": "hard",
+            "category": "Nature",
+            "hints": [
+                "It is an optical line where the earth's surface meets the sky.",
+                "No matter how far you travel across a landscape, you can never actually reach it.",
+                "It always seems to recede at the exact same pace you approach it."
+            ]
+        },
+        {
+            "id": 3,
+            "question": "Forward, I am heavy; backward I am not. What am I?",
+            "answer": "ton",
+            "difficulty": "hard",
+            "category": "Wordplay",
+            "hints": [
+                "Think about spelling words backwards and forwards.",
+                "A heavy unit of measurement in reverse spells out a completely different word.",
+                "Spell the word 'not' backwards to find what it becomes."
+            ]
+        },
+        {
+            "id": 4,
+            "question": "What can you hold in your right hand, but never in your left hand?",
+            "answer": "left hand",
+            "difficulty": "hard",
+            "category": "Wordplay",
+            "hints": [
+                "It's a clever anatomical riddle rather than an object.",
+                "Think about which part of your body is physically incapable of grasping itself.",
+                "Your right hand can grab your own left wrist or hand, but your other hand cannot hold itself."
+            ]
+        },
+        {
+            "id": 5,
+            "question": "A tree doubled in height each year until it reached its maximum height over the course of ten years. How many years did it take for the tree to reach half its maximum height?",
+            "answer": "nine",
+            "difficulty": "hard",
+            "category": "Math & Logic",
+            "hints": [
+                "Do not let the math confuse you with complex calculations.",
+                "If it doubles every single year to reach the top in year ten...",
+                "Think about what the height was exactly one year before it finished growing."
+            ]
+        },
+        {
+            "id": 6,
+            "question": "You can spend me, save me, waste me or make me, but once I’m gone, I never return.",
+            "answer": "time",
+            "difficulty": "hard",
+            "category": "Abstract",
+            "hints": [
+                "It marches forward constantly and cannot be paused or reversed.",
+                "Older adults often reflect on how much of it they have spent wisely.",
+                "It is measured in hours, minutes, and years."
+            ]
+        },
+        {
+            "id": 7,
+            "question": "What flies without wings and cries without eyes?",
+            "answer": "cloud",
+            "difficulty": "hard",
+            "category": "Nature",
+            "hints": [
+                "Look up high in the sky on a stormy or rainy day.",
+                "It drifts across the atmosphere without any feathers or wings.",
+                "When it gets heavy enough, it drops rain like tears."
+            ]
+        },
+        {
+            "id": 8,
+            "question": "A family has two parents and four children. Each child has one brother. How many boys are there?",
+            "answer": "two",
+            "difficulty": "hard",
+            "category": "Logic",
+            "hints": [
+                "Read the family description and sibling relationships carefully.",
+                "If every child shares the exact same brother...",
+                "That means there must be a mix of siblings, resulting in two boys total."
+            ]
+        },
+        {
+            "id": 9,
+            "question": "You enter a room containing one match, a candle, a fireplace, and a lantern. What do you light first?",
+            "answer": "match",
+            "difficulty": "hard",
+            "category": "Logic",
+            "hints": [
+                "Think about the sequential tools needed to create a flame.",
+                "You cannot ignite any of the large appliances without first sparking this tiny item.",
+                "It is the very first thing you strike in your hand."
+            ]
+        },
+        {
+            "id": 10,
+            "question": "What English word becomes shorter when you add two letters to it?",
+            "answer": "short",
+            "difficulty": "hard",
+            "category": "Wordplay",
+            "hints": [
+                "Focus purely on the literal definition of the adjective used in the question.",
+                "Take the target word itself.",
+                "If you append the letters 'er' to it, it literally becomes the word 'shorter'."
+            ]
+        },
+        {
+            "id": 11,
+            "question": "I belong to you, but other people use me far more than you do. What am I?",
+            "answer": "name",
+            "difficulty": "hard",
+            "category": "Abstract",
+            "hints": [
+                "It is something you are given at birth and written on official documents.",
+                "You rarely say it out loud when referring to yourself.",
+                "Friends, family, and acquaintances use it constantly to address you."
+            ]
+        }
+    ]
+}

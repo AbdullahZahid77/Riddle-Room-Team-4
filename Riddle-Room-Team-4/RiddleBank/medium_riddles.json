@@ -1,0 +1,162 @@
+{
+    "difficulty": "medium",
+    "totalRiddles": 13,
+    "riddles": [
+        {
+            "id": 1,
+            "question": "What starts with T, ends with T, and has T in it?",
+            "answer": "teapot",
+            "difficulty": "medium",
+            "category": "Wordplay",
+            "hints": [
+                "Think about the literal spelling of the riddle.",
+                "It is a household item used for serving a warm beverage.",
+                "It starts and ends with the letter 'T' and contains 'T' (tea-pot)."
+            ]
+        },
+        {
+            "id": 2,
+            "question": "What kind of ship had two mates but no captain?",
+            "answer": "relationship",
+            "difficulty": "medium",
+            "category": "Wordplay",
+            "hints": [
+                "It's not an actual vessel that floats on water.",
+                "It describes a personal connection between romantic partners.",
+                "The word ends in '-ship' and involves companionship."
+            ]
+        },
+        {
+            "id": 3,
+            "question": "What loses its head in the morning but gets it back at night?",
+            "answer": "pillow",
+            "difficulty": "medium",
+            "category": "Household",
+            "hints": [
+                "You interact with it right before falling asleep.",
+                "It rests underneath your head when you lie down in bed.",
+                "When you get up, your head is no longer resting on it."
+            ]
+        },
+        {
+            "id": 4,
+            "question": "Paul’s height is six feet, he’s an assistant at a butcher’s shop, and wears size 9 shoes. What does he weigh?",
+            "answer": "meat",
+            "difficulty": "medium",
+            "category": "Wordplay",
+            "hints": [
+                "Pay close attention to where he works.",
+                "He doesn't weigh himself on a bathroom scale.",
+                "His job requires him to measure out cuts of food."
+            ]
+        },
+        {
+            "id": 5,
+            "question": "I sometimes run, but I can’t walk. What am I?",
+            "answer": "nose",
+            "difficulty": "medium",
+            "category": "Body",
+            "hints": [
+                "It is a prominent feature on the center of your face.",
+                "It helps you smell and breathe.",
+                "When you have a cold, it tends to run."
+            ]
+        },
+        {
+            "id": 6,
+            "question": "I have cities but no houses, rivers but no water, and forests but no trees.",
+            "answer": "map",
+            "difficulty": "medium",
+            "category": "Objects",
+            "hints": [
+                "It is a flat representation of geographic regions.",
+                "Travelers use it to navigate when planning a road trip.",
+                "It represents the world on a piece of paper."
+            ]
+        },
+        {
+            "id": 7,
+            "question": "What never speaks but always replies?",
+            "answer": "echo",
+            "difficulty": "medium",
+            "category": "Nature",
+            "hints": [
+                "You usually hear it bouncing off canyon walls or empty rooms.",
+                "It repeats the exact sound or words you shout out.",
+                "It has no voice of its own."
+            ]
+        },
+        {
+            "id": 8,
+            "question": "I have many teeth, but I never bite.",
+            "answer": "comb",
+            "difficulty": "medium",
+            "category": "Objects",
+            "hints": [
+                "You keep it in your bathroom drawer or vanity.",
+                "You use it while styling your hair in front of a mirror.",
+                "Its rows of fine plastic or metal prongs look like teeth."
+            ]
+        },
+        {
+            "id": 9,
+            "question": "If there are three apples and you take away two, how many do you have?",
+            "answer": "two",
+            "difficulty": "medium",
+            "category": "Wordplay",
+            "hints": [
+                "Read the phrasing of the question very carefully.",
+                "Focus on who is doing the taking.",
+                "If you physically take two apples into your hands, that's how many you hold."
+            ]
+        },
+        {
+            "id": 10,
+            "question": "I am lighter than a feather, but nobody can hold me for very long. What am I?",
+            "answer": "breath",
+            "difficulty": "medium",
+            "category": "Abstract",
+            "hints": [
+                "It is something you take continuously to stay alive.",
+                "You pull it into your lungs and let it back out.",
+                "Try holding it for five minutes and see how long you last."
+            ]
+        },
+        {
+            "id": 11,
+            "question": "What thrives when you feed it, but dies when you water it?",
+            "answer": "fire",
+            "difficulty": "medium",
+            "category": "Nature",
+            "hints": [
+                "It produces bright flames and intense heat in a fireplace.",
+                "You feed it logs or wood to keep it going.",
+                "Pouring liquid on it will put it out immediately."
+            ]
+        },
+        {
+            "id": 12,
+            "question": "What kind of room has no walls, doors or windows?",
+            "answer": "mushroom",
+            "difficulty": "medium",
+            "category": "Nature",
+            "hints": [
+                "It is a trick question playing on a specific English suffix.",
+                "It grows in damp, shady areas outdoors or in forests.",
+                "It is a type of fungus you might slice up on a pizza."
+            ]
+        },
+        {
+            "id": 13,
+            "question": "What runs all around a backyard, yet never moves?",
+            "answer": "fence",
+            "difficulty": "medium",
+            "category": "Objects",
+            "hints": [
+                "It outlines the property perimeter of a suburban home.",
+                "It keeps pets or children safely contained in a yard.",
+                "It stays permanently fixed in place while outlining the yard."
+            ]
+        }
+    ]
+}

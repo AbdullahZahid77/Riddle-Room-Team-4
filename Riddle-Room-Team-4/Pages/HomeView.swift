@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-extension Color {
+private extension Color {
     init(hex: String) {
         let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
         var int: UInt64 = 0
@@ -22,23 +22,23 @@ extension Color {
 // MARK: - Home View
 struct HomeView: View {
 
-    // Persisted dark/light mode preference — shared with ContentView
     @AppStorage("isDarkMode") private var isDarkMode = false
+    @EnvironmentObject var userData: UserData
+    @State private var activeSlot: RiddleSlot? = nil
+    @State private var showingSettings = false
 
     var body: some View {
         VStack(spacing: 0) {
-            // Top bar: menu + theme toggle + bell
-            TopBarView(isDarkMode: $isDarkMode)
+            TopBarView(isDarkMode: $isDarkMode, onSettingsTap: { showingSettings = true })
                 .padding(.horizontal, 20)
                 .padding(.top, 8)
                 .padding(.bottom, 12)
 
-            // Scrollable cards
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 16) {
-                    GreetingSection()
-                    TodayRiddleCard()
-                    TonightRiddleCard()
+                    GreetingSection(username: userData.username)
+                    TodayRiddleCard(onStart: { activeSlot = .day })
+                    TonightRiddleCard(onStart: { activeSlot = .night })
                     StreakCard()
                 }
                 .padding(.horizontal, 20)
@@ -46,42 +46,49 @@ struct HomeView: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color(hex: "D3BEBA").ignoresSafeArea())
+        .background(Color(hex: "F1E4D5").ignoresSafeArea())
+        .fullScreenCover(item: $activeSlot) { slot in
+            RiddleFlowView(slot: slot, onDismiss: { activeSlot = nil })
+                .environmentObject(userData)
+        }
+        .sheet(isPresented: $showingSettings) {
+            SettingsView()
+                .environmentObject(userData)
+        }
     }
 }
 
 // MARK: - Top Bar
 struct TopBarView: View {
     @Binding var isDarkMode: Bool
+    var onSettingsTap: (() -> Void)? = nil
 
     var body: some View {
         HStack {
-            // Hamburger — future: opens side drawer
             Button {
+                onSettingsTap?()
             } label: {
-                Image(systemName: "line.3.horizontal")
+                Image(systemName: "gearshape.fill")
                     .font(.title2)
-                    .foregroundStyle(Color(hex: "51366C"))
+                    .foregroundStyle(Color(hex: "48367C"))
             }
 
             Spacer()
 
             HStack(spacing: 18) {
-                // Toggle light / dark mode
                 Button {
                     isDarkMode.toggle()
                 } label: {
                     Image(systemName: isDarkMode ? "sun.max.fill" : "moon.fill")
                         .font(.title2)
-                        .foregroundStyle(Color(hex: "51366C"))
+                        .foregroundStyle(Color(hex: "48367C"))
                 }
 
-                // Bell — future: notifications sheet
                 Button {
                 } label: {
                     Image(systemName: "bell")
                         .font(.title2)
-                        .foregroundStyle(Color(hex: "51366C"))
+                        .foregroundStyle(Color(hex: "48367C"))
                 }
             }
         }
@@ -90,10 +97,12 @@ struct TopBarView: View {
 
 // MARK: - Greeting
 struct GreetingSection: View {
+    let username: String
+
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             HStack(alignment: .center, spacing: 8) {
-                Text("Good morning!")
+                Text("Good morning\(username.isEmpty ? "!" : ", \(username)!")")
                     .font(.largeTitle)
                     .fontWeight(.bold)
                 Image(systemName: "sun.max.fill")
@@ -103,12 +112,20 @@ struct GreetingSection: View {
             Text("Ready for today's riddle?")
                 .font(.title3)
                 .foregroundStyle(.secondary)
+
+            Image("happy1")
+                .resizable()
+                .scaledToFit()
+                .frame(maxWidth: .infinity, maxHeight: 150)
+                .padding(.top, 10)
         }
     }
 }
 
-// MARK: - Today's Riddle Card
+// MARK: - Morning's Riddle Card
 struct TodayRiddleCard: View {
+    let onStart: () -> Void
+
     var body: some View {
         RiddleCard {
             HStack(alignment: .top, spacing: 16) {
@@ -117,7 +134,7 @@ struct TodayRiddleCard: View {
                     .foregroundStyle(.yellow)
 
                 VStack(alignment: .leading, spacing: 6) {
-                    Text("Today's Riddle")
+                    Text("Morning's Riddle")
                         .font(.headline)
                         .fontWeight(.semibold)
 
@@ -125,16 +142,14 @@ struct TodayRiddleCard: View {
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
 
-                    // Start button — future: navigate to riddle view
-                    Button {
-                    } label: {
+                    Button(action: onStart) {
                         Text("Start Riddle")
                             .font(.subheadline)
                             .fontWeight(.semibold)
                             .foregroundStyle(.white)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 12)
-                            .background(Color(hex: "51366C"))
+                            .background(Color(hex: "48367C"))
                             .clipShape(RoundedRectangle(cornerRadius: 12))
                     }
                     .padding(.top, 6)
@@ -146,28 +161,36 @@ struct TodayRiddleCard: View {
 
 // MARK: - Tonight's Riddle Card
 struct TonightRiddleCard: View {
+    let onStart: () -> Void
+
     var body: some View {
         RiddleCard {
-            HStack(alignment: .center, spacing: 16) {
+            HStack(alignment: .top, spacing: 16) {
                 Image(systemName: "moon.stars.fill")
                     .font(.system(size: 40))
-                    .foregroundStyle(.indigo)
+                    .foregroundStyle(Color(hex: "48367C"))
 
                 VStack(alignment: .leading, spacing: 6) {
                     Text("Tonight's Riddle")
                         .font(.headline)
                         .fontWeight(.semibold)
 
-                    Text("Unlocks at 6:00 PM")
+                    Text("A riddle to end your day")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
+
+                    Button(action: onStart) {
+                        Text("Start Night Riddle")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                            .foregroundStyle(.white)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 12)
+                            .background(Color(hex: "48367C"))
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                    }
+                    .padding(.top, 6)
                 }
-
-                Spacer()
-
-                Image(systemName: "lock.fill")
-                    .font(.title2)
-                    .foregroundStyle(.secondary)
             }
         }
     }
@@ -175,20 +198,14 @@ struct TonightRiddleCard: View {
 
 // MARK: - Streak Card
 struct StreakCard: View {
+    @EnvironmentObject var userData: UserData
 
-    // Placeholder data — replace with real model later
-    let streakDays = 5
-    let weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
-    let completedCount = 5
+    private let weekDayLabels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 
     var body: some View {
         RiddleCard {
             VStack(spacing: 14) {
                 HStack(spacing: 16) {
-//                    Image(systemName: "flame.fill")
-//                        .font(.system(size: 40))
-//                        .foregroundStyle(Color(hex: "51366C"))
-
                     VStack(alignment: .leading, spacing: 6) {
                         Text("Your Streak")
                             .font(.headline)
@@ -200,21 +217,21 @@ struct StreakCard: View {
 
                     Spacer()
 
-                    Text("\(streakDays) Days")
+                    Text("\(userData.streakDays) Days")
                         .font(.headline)
                         .fontWeight(.bold)
-                        .foregroundStyle(Color(hex: "51366C"))
+                        .foregroundStyle(Color(hex: "48367C"))
                 }
 
-                // Week day progress circles
                 HStack(spacing: 0) {
-                    ForEach(Array(weekDays.enumerated()), id: \.offset) { index, day in
+                    let completion = userData.thisWeekCompletion
+                    ForEach(Array(weekDayLabels.enumerated()), id: \.offset) { index, day in
                         VStack(spacing: 5) {
                             Circle()
-                                .fill(index < completedCount ? Color(hex: "51366C") : Color(.systemGray5))
+                                .fill(completion[index] ? Color(hex: "48367C") : Color(.systemGray5))
                                 .frame(width: 30, height: 30)
                                 .overlay {
-                                    if index < completedCount {
+                                    if completion[index] {
                                         Image(systemName: "checkmark")
                                             .font(.caption2)
                                             .fontWeight(.bold)
@@ -234,8 +251,6 @@ struct StreakCard: View {
 }
 
 // MARK: - Reusable Card Shell
-// Wraps any content in a rounded, background-coloured card.
-// The card height is flexible — it grows with its content.
 struct RiddleCard<Content: View>: View {
     let content: () -> Content
 
@@ -254,4 +269,5 @@ struct RiddleCard<Content: View>: View {
 
 #Preview {
     HomeView()
+        .environmentObject(UserData())
 }

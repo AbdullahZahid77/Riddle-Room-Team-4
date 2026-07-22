@@ -10,6 +10,8 @@ import SwiftData
 
 @main
 struct Riddle_Room_Team_4App: App {
+    @StateObject private var userData = UserData()
+
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Item.self,
@@ -26,6 +28,7 @@ struct Riddle_Room_Team_4App: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(userData)
         }
         .modelContainer(sharedModelContainer)
     }
