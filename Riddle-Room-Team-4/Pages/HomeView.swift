@@ -38,7 +38,14 @@ struct HomeView: View {
                 VStack(alignment: .leading, spacing: 16) {
                     GreetingSection(username: userData.username)
                     TodayRiddleCard(onStart: { activeSlot = .day })
-                    TonightRiddleCard(onStart: { activeSlot = .night })
+                    TimelineView(.periodic(from: .now, by: 60)) { context in
+                        let isNightRiddleUnlocked = Self.isNightRiddleUnlocked(at: context.date)
+
+                        TonightRiddleCard(
+                            isUnlocked: isNightRiddleUnlocked,
+                            onStart: { activeSlot = .night }
+                        )
+                    }
                     StreakCard()
                 }
                 .padding(.horizontal, 20)
@@ -55,6 +62,12 @@ struct HomeView: View {
             SettingsView()
                 .environmentObject(userData)
         }
+    }
+
+    private static func isNightRiddleUnlocked(at date: Date) -> Bool {
+        let unlockHour = 18
+        let hour = Calendar.current.component(.hour, from: date)
+        return hour >= unlockHour
     }
 }
 
@@ -161,34 +174,36 @@ struct TodayRiddleCard: View {
 
 // MARK: - Tonight's Riddle Card
 struct TonightRiddleCard: View {
+    let isUnlocked: Bool
     let onStart: () -> Void
 
     var body: some View {
         RiddleCard {
             HStack(alignment: .top, spacing: 16) {
-                Image(systemName: "moon.stars.fill")
+                Image(systemName: isUnlocked ? "moon.stars.fill" : "lock.fill")
                     .font(.system(size: 40))
-                    .foregroundStyle(Color(hex: "48367C"))
+                    .foregroundStyle(isUnlocked ? Color(hex: "48367C") : AppColors.darkRed)
 
                 VStack(alignment: .leading, spacing: 6) {
                     Text("Tonight's Riddle")
                         .font(.headline)
                         .fontWeight(.semibold)
 
-                    Text("A riddle to end your day")
+                    Text(isUnlocked ? "A riddle to end your day" : "Unlocks at 6 PM")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
 
                     Button(action: onStart) {
-                        Text("Start Night Riddle")
+                        Text(isUnlocked ? "Start Night Riddle" : "Locked until 6 PM")
                             .font(.subheadline)
                             .fontWeight(.semibold)
                             .foregroundStyle(.white)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 12)
-                            .background(Color(hex: "48367C"))
+                            .background(isUnlocked ? Color(hex: "48367C") : AppColors.darkRed)
                             .clipShape(RoundedRectangle(cornerRadius: 12))
                     }
+                    .disabled(!isUnlocked)
                     .padding(.top, 6)
                 }
             }

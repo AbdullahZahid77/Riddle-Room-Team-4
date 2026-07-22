@@ -8,6 +8,7 @@ enum AppColors {
     static let orange = Color(red: 0.96, green: 0.61, blue: 0.08)
     static let green = Color(red: 0.22, green: 0.58, blue: 0.33)
     static let red = Color(red: 0.95, green: 0.33, blue: 0.22)
+    static let darkRed = Color(red: 0.55, green: 0.12, blue: 0.10)
 }
 
 // MARK: - App-wide font scale environment key
