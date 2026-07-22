@@ -29,6 +29,7 @@ struct Riddle_Room_Team_4App: App {
         WindowGroup {
             ContentView()
                 .environmentObject(userData)
+                .preferredColorScheme(.light)
         }
         .modelContainer(sharedModelContainer)
     }
