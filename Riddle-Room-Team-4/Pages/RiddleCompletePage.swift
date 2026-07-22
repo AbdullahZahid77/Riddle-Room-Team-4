@@ -85,7 +85,7 @@ struct RiddleCompletePage: View {
             }
             .padding(.horizontal, 24)
             .padding(.vertical, 16)
-            .background(RoundedRectangle(cornerRadius: 12).fill(Color.white.opacity(0.42)))
+            .background(RoundedRectangle(cornerRadius: 12).fill(AppColors.panel))
             .overlay(RoundedRectangle(cornerRadius: 12).stroke(AppColors.ink.opacity(0.12), lineWidth: 1.5))
             .padding(.horizontal, 28)
             .padding(.top, 28)

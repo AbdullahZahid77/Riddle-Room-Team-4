@@ -46,7 +46,7 @@ struct HomeView: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color(hex: "D3BEBA").ignoresSafeArea())
+        .background(Color(hex: "F1E4D5").ignoresSafeArea())
         .fullScreenCover(item: $activeSlot) { slot in
             RiddleFlowView(slot: slot, onDismiss: { activeSlot = nil })
                 .environmentObject(userData)
@@ -70,7 +70,7 @@ struct TopBarView: View {
             } label: {
                 Image(systemName: "gearshape.fill")
                     .font(.title2)
-                    .foregroundStyle(Color(hex: "51366C"))
+                    .foregroundStyle(Color(hex: "48367C"))
             }
 
             Spacer()
@@ -81,14 +81,14 @@ struct TopBarView: View {
                 } label: {
                     Image(systemName: isDarkMode ? "sun.max.fill" : "moon.fill")
                         .font(.title2)
-                        .foregroundStyle(Color(hex: "51366C"))
+                        .foregroundStyle(Color(hex: "48367C"))
                 }
 
                 Button {
                 } label: {
                     Image(systemName: "bell")
                         .font(.title2)
-                        .foregroundStyle(Color(hex: "51366C"))
+                        .foregroundStyle(Color(hex: "48367C"))
                 }
             }
         }
@@ -122,7 +122,7 @@ struct GreetingSection: View {
     }
 }
 
-// MARK: - Today's Riddle Card
+// MARK: - Morning's Riddle Card
 struct TodayRiddleCard: View {
     let onStart: () -> Void
 
@@ -134,7 +134,7 @@ struct TodayRiddleCard: View {
                     .foregroundStyle(.yellow)
 
                 VStack(alignment: .leading, spacing: 6) {
-                    Text("Today's Riddle")
+                    Text("Morning's Riddle")
                         .font(.headline)
                         .fontWeight(.semibold)
 
@@ -149,7 +149,7 @@ struct TodayRiddleCard: View {
                             .foregroundStyle(.white)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 12)
-                            .background(Color(hex: "51366C"))
+                            .background(Color(hex: "48367C"))
                             .clipShape(RoundedRectangle(cornerRadius: 12))
                     }
                     .padding(.top, 6)
@@ -168,7 +168,7 @@ struct TonightRiddleCard: View {
             HStack(alignment: .top, spacing: 16) {
                 Image(systemName: "moon.stars.fill")
                     .font(.system(size: 40))
-                    .foregroundStyle(Color(hex: "51366C"))
+                    .foregroundStyle(Color(hex: "48367C"))
 
                 VStack(alignment: .leading, spacing: 6) {
                     Text("Tonight's Riddle")
@@ -186,7 +186,7 @@ struct TonightRiddleCard: View {
                             .foregroundStyle(.white)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 12)
-                            .background(Color(hex: "51366C"))
+                            .background(Color(hex: "48367C"))
                             .clipShape(RoundedRectangle(cornerRadius: 12))
                     }
                     .padding(.top, 6)
@@ -220,7 +220,7 @@ struct StreakCard: View {
                     Text("\(userData.streakDays) Days")
                         .font(.headline)
                         .fontWeight(.bold)
-                        .foregroundStyle(Color(hex: "51366C"))
+                        .foregroundStyle(Color(hex: "48367C"))
                 }
 
                 HStack(spacing: 0) {
@@ -228,7 +228,7 @@ struct StreakCard: View {
                     ForEach(Array(weekDayLabels.enumerated()), id: \.offset) { index, day in
                         VStack(spacing: 5) {
                             Circle()
-                                .fill(completion[index] ? Color(hex: "51366C") : Color(.systemGray5))
+                                .fill(completion[index] ? Color(hex: "48367C") : Color(.systemGray5))
                                 .frame(width: 30, height: 30)
                                 .overlay {
                                     if completion[index] {

@@ -31,24 +31,24 @@ struct SetupView: View {
             // Illustration
             ZStack {
                 Circle()
-                    .fill(Color(hex: "51366C").opacity(0.10))
+                    .fill(Color(hex: "48367C").opacity(0.10))
                     .frame(width: 160, height: 160)
 
                 Image(systemName: "person.crop.circle")
                     .font(.system(size: 96 * fontScale, weight: .light))
-                    .foregroundStyle(Color(hex: "51366C"))
+                    .foregroundStyle(Color(hex: "48367C"))
             }
 
             // Welcome text
             VStack(spacing: 10) {
                 Text("Welcome to Riddle Room!")
                     .font(.system(size: 28 * fontScale, weight: .bold))
-                    .foregroundStyle(Color(hex: "51366C"))
+                    .foregroundStyle(Color(hex: "48367C"))
                     .multilineTextAlignment(.center)
 
                 Text("Let's set up your profile.\nWhat should we call you?")
                     .font(.system(size: 17 * fontScale, weight: .semibold))
-                    .foregroundStyle(Color(hex: "51366C").opacity(0.70))
+                    .foregroundStyle(Color(hex: "48367C").opacity(0.70))
                     .multilineTextAlignment(.center)
                     .lineSpacing(6)
             }
@@ -59,18 +59,18 @@ struct SetupView: View {
             VStack(alignment: .leading, spacing: 10) {
                 Text("Your Name")
                     .font(.system(size: 14 * fontScale, weight: .bold))
-                    .foregroundStyle(Color(hex: "51366C").opacity(0.70))
+                    .foregroundStyle(Color(hex: "48367C").opacity(0.70))
 
                 TextField("e.g. Margaret", text: $username)
                     .font(.system(size: 18 * fontScale, weight: .semibold))
-                    .foregroundStyle(Color(hex: "51366C"))
+                    .foregroundStyle(Color(hex: "48367C"))
                     .padding(.horizontal, 16)
                     .frame(height: 56)
-                    .background(Color.white)
+                    .background(AppColors.panel)
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                     .overlay(
                         RoundedRectangle(cornerRadius: 12)
-                            .stroke(Color(hex: "51366C").opacity(0.20), lineWidth: 1.5)
+                            .stroke(Color(hex: "48367C").opacity(0.20), lineWidth: 1.5)
                     )
             }
             .padding(20)
@@ -96,8 +96,8 @@ struct SetupView: View {
                     .padding(.vertical, 4)
                     .background(
                         username.trimmingCharacters(in: .whitespaces).isEmpty
-                            ? Color(hex: "51366C").opacity(0.40)
-                            : Color(hex: "51366C")
+                            ? Color(hex: "48367C").opacity(0.40)
+                            : Color(hex: "48367C")
                     )
                     .clipShape(RoundedRectangle(cornerRadius: 14))
             }
@@ -107,7 +107,7 @@ struct SetupView: View {
             .padding(.bottom, 48)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color(hex: "D3BEBA").ignoresSafeArea())
+        .background(Color(hex: "F1E4D5").ignoresSafeArea())
     }
 }
 

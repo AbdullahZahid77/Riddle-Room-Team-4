@@ -142,7 +142,7 @@ struct SettingsView: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .background(
                                 RoundedRectangle(cornerRadius: 10)
-                                    .fill(AppColors.purple.opacity(0.06))
+                                    .fill(AppColors.panel)
                             )
                             .overlay(
                                 RoundedRectangle(cornerRadius: 10)
@@ -185,7 +185,7 @@ struct SettingsView: View {
                 .padding(.bottom, 36)
             }
         }
-        .background(Color(hex: "D3BEBA").ignoresSafeArea())
+        .background(Color(hex: "F1E4D5").ignoresSafeArea())
         .alert("Reset App Data", isPresented: $showingResetAlert) {
             Button("Reset", role: .destructive) {
                 userData.resetAll()

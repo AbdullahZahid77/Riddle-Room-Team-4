@@ -10,7 +10,7 @@ struct RiddleCorrectPage: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            HeaderBar(title: "Today's Riddle", onBack: onBack)
+            HeaderBar(title: "Morning's Riddle", onBack: onBack)
                 .padding(.top, 12)
 
             ProgressPill(currentRiddle: currentRiddleNumber, totalRiddles: totalRiddles)

@@ -14,7 +14,7 @@ struct RiddleWrongPage: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            HeaderBar(title: "Today's Riddle", onBack: onBack)
+            HeaderBar(title: "Morning's Riddle", onBack: onBack)
                 .padding(.top, 12)
 
             ProgressPill(currentRiddle: currentRiddleNumber, totalRiddles: totalRiddles)
@@ -48,7 +48,7 @@ struct RiddleWrongPage: View {
                     .padding(.horizontal, 20)
                     .frame(minHeight: 58)
                     .padding(.vertical, 4)
-                    .background(RoundedRectangle(cornerRadius: 12).fill(Color.white))
+                    .background(RoundedRectangle(cornerRadius: 12).fill(AppColors.panel))
                     .overlay(RoundedRectangle(cornerRadius: 12).stroke(AppColors.red.opacity(0.25), lineWidth: 1.5))
                     .padding(.top, 6)
 

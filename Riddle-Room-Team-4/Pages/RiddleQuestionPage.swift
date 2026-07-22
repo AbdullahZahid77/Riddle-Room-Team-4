@@ -22,7 +22,7 @@ struct RiddleQuestionPage: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            HeaderBar(title: "Today's Riddle", onBack: onBack)
+            HeaderBar(title: "Morning's Riddle", onBack: onBack)
                 .padding(.top, 12)
 
             ProgressPill(currentRiddle: currentRiddleNumber, totalRiddles: totalRiddles)
@@ -67,7 +67,7 @@ struct RiddleQuestionPage: View {
                         .onSubmit { if canSubmit { onSubmit() } }
                         .padding(.horizontal, 18)
                         .frame(height: 58)
-                        .background(RoundedRectangle(cornerRadius: 12).fill(Color.white))
+                        .background(RoundedRectangle(cornerRadius: 12).fill(AppColors.panel))
                         .overlay(RoundedRectangle(cornerRadius: 12).stroke(AppColors.purple.opacity(0.18), lineWidth: 1.5))
 
                     // Inline hints revealed so far
