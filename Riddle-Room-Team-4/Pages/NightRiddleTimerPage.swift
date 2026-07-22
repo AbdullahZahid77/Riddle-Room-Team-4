@@ -36,7 +36,7 @@ struct NightRiddleTimerPage: View {
                     }
 
                     VStack(spacing: 12) {
-                        Text(isUnlocked ? "Night riddle is ready!" : "Night riddle unlocks at 7 PM")
+                        Text(isUnlocked ? "Night riddle is ready!" : "Night riddle unlocks at 6 PM")
                             .font(.system(size: 26 * fontScale, weight: .bold))
                             .foregroundStyle(AppColors.ink)
                             .multilineTextAlignment(.center)
@@ -69,7 +69,7 @@ struct NightRiddleTimerPage: View {
                 Spacer()
 
                 Button(action: onStartNightRiddle) {
-                    Text(isUnlocked ? "Start Night Riddle" : "Locked until 7 PM")
+                    Text(isUnlocked ? "Start Night Riddle" : "Locked until 6 PM")
                         .font(.system(size: 18 * fontScale, weight: .bold))
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
