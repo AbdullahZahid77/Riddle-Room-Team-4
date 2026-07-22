@@ -1,22 +1,28 @@
 import SwiftUI
 
-private extension Color {
-    init(hex: String) {
-        let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
-        var int: UInt64 = 0
-        Scanner(string: hex).scanHexInt64(&int)
-        let r = Double((int >> 16) & 0xFF) / 255
-        let g = Double((int >> 8) & 0xFF) / 255
-        let b = Double(int & 0xFF) / 255
-        self.init(red: r, green: g, blue: b)
-    }
-}
-
 struct SettingsView: View {
     @EnvironmentObject var userData: UserData
     @Environment(\.dismiss) var dismiss
     @Environment(\.appFontScale) var fontScale
+    @Environment(\.colorScheme) var colorScheme
     @State private var showingResetAlert = false
+
+    // Bypass UIColor adaptive (which reads system trait, not SwiftUI preferredColorScheme)
+    private var textColor: Color {
+        colorScheme == .dark
+            ? Color(red: 0.98, green: 0.94, blue: 0.89)   // beige
+            : Color(red: 0.08, green: 0.10, blue: 0.31)   // dark navy
+    }
+    private var bgColor: Color {
+        colorScheme == .dark
+            ? Color(red: 0.07, green: 0.06, blue: 0.12)
+            : Color(red: 0.945, green: 0.894, blue: 0.835)
+    }
+    private var panelColor: Color {
+        colorScheme == .dark
+            ? Color(red: 0.12, green: 0.09, blue: 0.19)
+            : Color(red: 1.0, green: 0.969, blue: 0.929)
+    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -24,14 +30,14 @@ struct SettingsView: View {
             ZStack {
                 Text("Settings")
                     .font(.system(size: 20 * fontScale, weight: .bold))
-                    .foregroundStyle(AppColors.ink)
+                    .foregroundStyle(textColor)
 
                 HStack {
                     Spacer()
                     Button { dismiss() } label: {
                         Image(systemName: "xmark.circle.fill")
                             .font(.title2)
-                            .foregroundStyle(AppColors.ink.opacity(0.35))
+                            .foregroundStyle(textColor.opacity(0.35))
                     }
                 }
                 .padding(.horizontal, 20)
@@ -43,9 +49,9 @@ struct SettingsView: View {
                 VStack(spacing: 16) {
 
                     // MARK: Sound
-                    SettingsCard {
+                    SettingsCard(panelColor: panelColor) {
                         VStack(spacing: 0) {
-                            SectionHeader(icon: "speaker.wave.2.fill", title: "Sound")
+                            SectionHeader(icon: "speaker.wave.2.fill", title: "Sound", textColor: textColor)
 
                             Divider()
                                 .padding(.vertical, 14)
@@ -55,10 +61,10 @@ struct SettingsView: View {
                                 VStack(alignment: .leading, spacing: 3) {
                                     Text("Background Music")
                                         .font(.system(size: 16 * fontScale, weight: .semibold))
-                                        .foregroundStyle(AppColors.ink)
+                                        .foregroundStyle(textColor)
                                     Text("Coming soon")
                                         .font(.system(size: 12 * fontScale, weight: .medium))
-                                        .foregroundStyle(AppColors.ink.opacity(0.45))
+                                        .foregroundStyle(textColor.opacity(0.45))
                                 }
                                 Spacer()
                                 Toggle("", isOn: Binding(
@@ -78,32 +84,32 @@ struct SettingsView: View {
                                 HStack {
                                     Text("Sound Effects")
                                         .font(.system(size: 16 * fontScale, weight: .semibold))
-                                        .foregroundStyle(AppColors.ink)
+                                        .foregroundStyle(textColor)
                                     Spacer()
                                     Text("Coming soon")
                                         .font(.system(size: 12 * fontScale, weight: .medium))
-                                        .foregroundStyle(AppColors.ink.opacity(0.45))
+                                        .foregroundStyle(textColor.opacity(0.45))
                                 }
                                 HStack(spacing: 10) {
                                     Image(systemName: "speaker.fill")
                                         .font(.caption.weight(.semibold))
-                                        .foregroundStyle(AppColors.ink.opacity(0.45))
+                                        .foregroundStyle(textColor.opacity(0.45))
                                     Slider(value: $userData.sfxVolume, in: 0...1)
                                         .tint(AppColors.purple)
                                         .disabled(true)
                                         .opacity(0.45)
                                     Image(systemName: "speaker.wave.3.fill")
                                         .font(.caption.weight(.semibold))
-                                        .foregroundStyle(AppColors.ink.opacity(0.45))
+                                        .foregroundStyle(textColor.opacity(0.45))
                                 }
                             }
                         }
                     }
 
                     // MARK: Text Size
-                    SettingsCard {
+                    SettingsCard(panelColor: panelColor) {
                         VStack(spacing: 0) {
-                            SectionHeader(icon: "textformat.size", title: "Text Size")
+                            SectionHeader(icon: "textformat.size", title: "Text Size", textColor: textColor)
 
                             Divider()
                                 .padding(.vertical, 14)
@@ -111,12 +117,12 @@ struct SettingsView: View {
                             HStack(spacing: 12) {
                                 Text("A")
                                     .font(.system(size: 13, weight: .bold))
-                                    .foregroundStyle(AppColors.ink.opacity(0.5))
+                                    .foregroundStyle(textColor.opacity(0.5))
                                 Slider(value: $userData.fontScale, in: 0.8...1.3)
                                     .tint(AppColors.purple)
                                 Text("A")
                                     .font(.system(size: 24, weight: .bold))
-                                    .foregroundStyle(AppColors.ink)
+                                    .foregroundStyle(textColor)
                             }
 
                             // Live preview card
@@ -128,13 +134,13 @@ struct SettingsView: View {
 
                                 Text("Ready for today's riddle?")
                                     .font(.system(size: 22 * fontScale, weight: .bold))
-                                    .foregroundStyle(AppColors.ink)
+                                    .foregroundStyle(textColor)
                                     .lineLimit(2)
                                     .fixedSize(horizontal: false, vertical: true)
 
                                 Text("Choose a difficulty and test your mind with a fun daily challenge.")
                                     .font(.system(size: 14 * fontScale, weight: .regular))
-                                    .foregroundStyle(AppColors.ink.opacity(0.65))
+                                    .foregroundStyle(textColor.opacity(0.65))
                                     .lineSpacing(4)
                                     .fixedSize(horizontal: false, vertical: true)
                             }
@@ -142,7 +148,7 @@ struct SettingsView: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .background(
                                 RoundedRectangle(cornerRadius: 10)
-                                    .fill(AppColors.panel)
+                                    .fill(panelColor.opacity(0.6))
                             )
                             .overlay(
                                 RoundedRectangle(cornerRadius: 10)
@@ -153,7 +159,7 @@ struct SettingsView: View {
                     }
 
                     // MARK: Reset
-                    SettingsCard {
+                    SettingsCard(panelColor: panelColor) {
                         Button { showingResetAlert = true } label: {
                             HStack(spacing: 14) {
                                 Image(systemName: "arrow.counterclockwise")
@@ -185,7 +191,7 @@ struct SettingsView: View {
                 .padding(.bottom, 36)
             }
         }
-        .background(AppColors.background.ignoresSafeArea())
+        .background(bgColor.ignoresSafeArea())
         .alert("Reset App Data", isPresented: $showingResetAlert) {
             Button("Reset", role: .destructive) {
                 userData.resetAll()
@@ -203,6 +209,7 @@ struct SettingsView: View {
 private struct SectionHeader: View {
     let icon: String
     let title: String
+    let textColor: Color
     @Environment(\.appFontScale) var fontScale
 
     var body: some View {
@@ -215,7 +222,7 @@ private struct SectionHeader: View {
 
             Text(title)
                 .font(.system(size: 13 * fontScale, weight: .bold))
-                .foregroundStyle(AppColors.ink.opacity(0.55))
+                .foregroundStyle(textColor.opacity(0.55))
                 .tracking(0.8)
                 .textCase(.uppercase)
         }
@@ -224,9 +231,11 @@ private struct SectionHeader: View {
 }
 
 private struct SettingsCard<Content: View>: View {
+    let panelColor: Color
     let content: () -> Content
 
-    init(@ViewBuilder content: @escaping () -> Content) {
+    init(panelColor: Color, @ViewBuilder content: @escaping () -> Content) {
+        self.panelColor = panelColor
         self.content = content
     }
 
@@ -234,7 +243,7 @@ private struct SettingsCard<Content: View>: View {
         content()
             .padding(16)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(AppColors.panel)
+            .background(panelColor)
             .clipShape(RoundedRectangle(cornerRadius: 16))
     }
 }

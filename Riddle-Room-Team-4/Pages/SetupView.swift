@@ -66,7 +66,7 @@ struct SetupView: View {
                     .foregroundStyle(Color(hex: "48367C"))
                     .padding(.horizontal, 16)
                     .frame(height: 56)
-                    .background(AppColors.panel)
+                    .background(Color(hex: "EDE3D8"))
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                     .overlay(
                         RoundedRectangle(cornerRadius: 12)
@@ -108,6 +108,7 @@ struct SetupView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color(hex: "F1E4D5").ignoresSafeArea())
+        .preferredColorScheme(.light)
     }
 }
 

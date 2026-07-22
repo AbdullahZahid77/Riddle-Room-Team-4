@@ -7,6 +7,11 @@ struct CircleDetailView: View {
 
     @Environment(\.dismiss) var dismiss
     @Environment(\.appFontScale) var fontScale
+    @Environment(\.colorScheme) private var colorScheme
+
+    private var codeTextColor: Color {
+        colorScheme == .dark ? AppColors.darkInk : AppColors.purple
+    }
 
     @State private var showingHowToPlay = false
     @State private var showingMyRiddle = false
@@ -138,7 +143,7 @@ struct CircleDetailView: View {
                     .foregroundStyle(AppColors.ink.opacity(0.45))
                 Text(circle.id)
                     .font(.system(size: 22 * fontScale, weight: .heavy, design: .rounded))
-                    .foregroundStyle(AppColors.purple)
+                    .foregroundStyle(codeTextColor)
             }
             Spacer()
             Button {

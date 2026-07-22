@@ -6,6 +6,11 @@ struct FinalGuessView: View {
     let onDismiss: () -> Void
 
     @Environment(\.appFontScale) var fontScale
+    @Environment(\.colorScheme) private var colorScheme
+
+    private var clueTextColor: Color {
+        colorScheme == .dark ? AppColors.darkInk : AppColors.purple
+    }
 
     @State private var guess: String = ""
     @State private var submitted = false
@@ -181,7 +186,7 @@ struct FinalGuessView: View {
         VStack(spacing: 4) {
             Text(member.submittedAnswer.isEmpty ? "?" : member.submittedAnswer.capitalized)
                 .font(.system(size: 18 * fontScale, weight: .heavy, design: .rounded))
-                .foregroundStyle(member.submittedAnswer.isEmpty ? AppColors.ink.opacity(0.30) : AppColors.purple)
+                .foregroundStyle(member.submittedAnswer.isEmpty ? AppColors.ink.opacity(0.30) : clueTextColor)
             Text(member.name.components(separatedBy: " ").first ?? member.name)
                 .font(.system(size: 11 * fontScale, weight: .semibold))
                 .foregroundStyle(AppColors.ink.opacity(0.45))
