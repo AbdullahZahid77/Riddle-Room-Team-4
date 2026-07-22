@@ -16,6 +16,7 @@ struct DarkHomeView: View {
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 16) {
                     DarkGreetingSection(username: userData.username)
+                    GroupRiddleImage()
                     DarkTonightRiddleCard(onStart: { activeSlot = .night })
                     DarkMorningLockedCard()
                     DarkStreakCard()
@@ -25,7 +26,7 @@ struct DarkHomeView: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(AppColors.darkBackground.ignoresSafeArea())
+        .background(NightSkyBackground().ignoresSafeArea())
         .preferredColorScheme(.dark)
         .fullScreenCover(item: $activeSlot) { slot in
             RiddleFlowView(slot: slot, onDismiss: { activeSlot = nil })
@@ -36,6 +37,81 @@ struct DarkHomeView: View {
                 .environmentObject(userData)
         }
     }
+}
+
+private struct NightSkyBackground: View {
+    private let stars: [NightSkyStar] = [
+        NightSkyStar(x: 0.16, y: 0.08, size: 12, opacity: 0.90),
+        NightSkyStar(x: 0.33, y: 0.11, size: 8, opacity: 0.60),
+        NightSkyStar(x: 0.56, y: 0.08, size: 11, opacity: 0.78),
+        NightSkyStar(x: 0.78, y: 0.12, size: 9, opacity: 0.70),
+        NightSkyStar(x: 0.91, y: 0.17, size: 13, opacity: 0.82),
+        NightSkyStar(x: 0.20, y: 0.20, size: 6, opacity: 0.50),
+        NightSkyStar(x: 0.68, y: 0.23, size: 7, opacity: 0.52),
+        NightSkyStar(x: 0.10, y: 0.32, size: 9, opacity: 0.62),
+        NightSkyStar(x: 0.58, y: 0.38, size: 5, opacity: 0.38),
+        NightSkyStar(x: 0.86, y: 0.31, size: 6, opacity: 0.42)
+    ]
+
+    var body: some View {
+        GeometryReader { proxy in
+            ZStack {
+                LinearGradient(
+                    colors: [
+                        Color(red: 0.08, green: 0.02, blue: 0.20),
+                        Color(red: 0.16, green: 0.06, blue: 0.30),
+                        Color(red: 0.06, green: 0.02, blue: 0.14)
+                    ],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+
+                RadialGradient(
+                    colors: [
+                        Color(red: 0.38, green: 0.20, blue: 0.55).opacity(0.45),
+                        .clear
+                    ],
+                    center: .center,
+                    startRadius: 20,
+                    endRadius: 360
+                )
+
+                ForEach(stars) { star in
+                    ShinyStar(size: star.size, opacity: star.opacity)
+                        .position(
+                            x: proxy.size.width * star.x,
+                            y: proxy.size.height * star.y
+                        )
+                }
+            }
+        }
+    }
+}
+
+private struct ShinyStar: View {
+    let size: CGFloat
+    let opacity: Double
+
+    var body: some View {
+        ZStack {
+            Circle()
+                .fill(.white.opacity(opacity * 0.22))
+                .frame(width: size * 1.8, height: size * 1.8)
+                .blur(radius: 3)
+
+            Image(systemName: "sparkle")
+                .font(.system(size: size, weight: .semibold))
+                .foregroundStyle(.white.opacity(opacity))
+        }
+    }
+}
+
+private struct NightSkyStar: Identifiable {
+    let id = UUID()
+    let x: CGFloat
+    let y: CGFloat
+    let size: CGFloat
+    let opacity: Double
 }
 
 private struct DarkTopBarView: View {
@@ -84,21 +160,22 @@ private struct DarkGreetingSection: View {
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .foregroundStyle(AppColors.darkInk)
-
-                Image(systemName: "moon.stars.fill")
-                    .font(.title)
-                    .foregroundStyle(AppColors.darkAccent)
+//
+//                Image(systemName: "moon.stars.fill")
+//                    .font(.title)
+//                    .foregroundStyle(AppColors.darkAccent)
             }
 
             Text("Ready for tonight's riddle?")
                 .font(.title3)
                 .foregroundStyle(AppColors.darkMuted)
 
-            Image("thinking")
-                .resizable()
-                .scaledToFit()
-                .frame(maxWidth: .infinity, maxHeight: 150)
-                .padding(.top, 10)
+            
+//            Image("happy1")
+//                .resizable()
+//                .scaledToFit()
+//                .frame(maxWidth: .infinity, maxHeight: 150)
+//                .padding(.top, 10)
         }
     }
 }
@@ -112,6 +189,7 @@ private struct DarkTonightRiddleCard: View {
                 Image(systemName: "moon.stars.fill")
                     .font(.system(size: 40))
                     .foregroundStyle(AppColors.darkAccent)
+                    .padding(.top, 22)
 
                 VStack(alignment: .leading, spacing: 6) {
                     Text("Tonight's Riddle")
@@ -144,9 +222,9 @@ private struct DarkMorningLockedCard: View {
     var body: some View {
         DarkRiddleCard {
             HStack(alignment: .top, spacing: 16) {
-                Image(systemName: "lock.fill")
+                Image(systemName: "sun.max.fill")
                     .font(.system(size: 40))
-                    .foregroundStyle(AppColors.darkRed)
+                    .foregroundStyle(.yellow)
 
                 VStack(alignment: .leading, spacing: 6) {
                     Text("Morning's Riddle")
@@ -154,24 +232,17 @@ private struct DarkMorningLockedCard: View {
                         .fontWeight(.semibold)
                         .foregroundStyle(AppColors.darkInk)
 
-                    Text("Locked until morning")
+                    Text("Unlocks at 5 PM")
                         .font(.subheadline)
                         .foregroundStyle(AppColors.darkMuted)
-
-                    Button {
-                    } label: {
-                        Text("Locked until morning")
-                            .font(.subheadline)
-                            .fontWeight(.semibold)
-                            .foregroundStyle(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 12)
-                            .background(AppColors.darkRed)
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
-                    }
-                    .disabled(true)
-                    .padding(.top, 6)
                 }
+
+                Spacer()
+
+                Image(systemName: "lock.fill")
+                    .font(.system(size: 38))
+                    .foregroundStyle(AppColors.darkRed)
+                    .padding(.trailing, 18)
             }
         }
     }

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIKit
 
 private extension Color {
     init(hex: String) {
@@ -28,39 +29,44 @@ struct HomeView: View {
     @State private var showingSettings = false
 
     var body: some View {
-        VStack(spacing: 0) {
-            TopBarView(isDarkMode: $isDarkMode, onSettingsTap: { showingSettings = true })
-                .padding(.horizontal, 20)
-                .padding(.top, 8)
-                .padding(.bottom, 12)
+        if isDarkMode {
+            DarkHomeView()
+        } else {
+            VStack(spacing: 0) {
+                TopBarView(isDarkMode: $isDarkMode, onSettingsTap: { showingSettings = true })
+                    .padding(.horizontal, 20)
+                    .padding(.top, 8)
+                    .padding(.bottom, 12)
 
-            ScrollView(showsIndicators: false) {
-                VStack(alignment: .leading, spacing: 16) {
-                    GreetingSection(username: userData.username)
-                    TodayRiddleCard(onStart: { activeSlot = .day })
-                    TimelineView(.periodic(from: .now, by: 60)) { context in
-                        let isNightRiddleUnlocked = Self.isNightRiddleUnlocked(at: context.date)
+                ScrollView(showsIndicators: false) {
+                    VStack(alignment: .leading, spacing: 16) {
+                        GreetingSection(username: userData.username)
+                        GroupRiddleImage()
+                        TodayRiddleCard(onStart: { activeSlot = .day })
+                        TimelineView(.periodic(from: .now, by: 60)) { context in
+                            let isNightRiddleUnlocked = Self.isNightRiddleUnlocked(at: context.date)
 
-                        TonightRiddleCard(
-                            isUnlocked: isNightRiddleUnlocked,
-                            onStart: { activeSlot = .night }
-                        )
+                            TonightRiddleCard(
+                                isUnlocked: isNightRiddleUnlocked,
+                                onStart: { activeSlot = .night }
+                            )
+                        }
+                        StreakCard()
                     }
-                    StreakCard()
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 24)
                 }
-                .padding(.horizontal, 20)
-                .padding(.bottom, 24)
             }
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color(hex: "F1E4D5").ignoresSafeArea())
-        .fullScreenCover(item: $activeSlot) { slot in
-            RiddleFlowView(slot: slot, onDismiss: { activeSlot = nil })
-                .environmentObject(userData)
-        }
-        .sheet(isPresented: $showingSettings) {
-            SettingsView()
-                .environmentObject(userData)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(Color(hex: "F1E4D5").ignoresSafeArea())
+            .fullScreenCover(item: $activeSlot) { slot in
+                RiddleFlowView(slot: slot, onDismiss: { activeSlot = nil })
+                    .environmentObject(userData)
+            }
+            .sheet(isPresented: $showingSettings) {
+                SettingsView()
+                    .environmentObject(userData)
+            }
         }
     }
 
@@ -118,20 +124,38 @@ struct GreetingSection: View {
                 Text("Good morning\(username.isEmpty ? "!" : ", \(username)!")")
                     .font(.largeTitle)
                     .fontWeight(.bold)
-                Image(systemName: "sun.max.fill")
-                    .font(.title)
-                    .foregroundStyle(.yellow)
+                    .foregroundStyle(AppColors.deepPurple)
+//                Image(systemName: "sun.max.fill")
+//                    .font(.title)
+//                    .foregroundStyle(.yellow)
             }
             Text("Ready for today's riddle?")
                 .font(.title3)
                 .foregroundStyle(.secondary)
 
-            Image("happy1")
-                .resizable()
-                .scaledToFit()
-                .frame(maxWidth: .infinity, maxHeight: 150)
-                .padding(.top, 10)
         }
+    }
+}
+
+// MARK: - Group Image
+struct GroupRiddleImage: View {
+    private var groupImage: UIImage? {
+        guard let url = Bundle.main.url(forResource: "group", withExtension: "png") else {
+            return nil
+        }
+        return UIImage(contentsOfFile: url.path)
+    }
+
+    var body: some View {
+        Group {
+            if let groupImage {
+                Image(uiImage: groupImage)
+                    .resizable()
+                    .scaledToFit()
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .frame(height: 170)
     }
 }
 
@@ -145,11 +169,13 @@ struct TodayRiddleCard: View {
                 Image(systemName: "sun.max.fill")
                     .font(.system(size: 40))
                     .foregroundStyle(.yellow)
+                    .padding(.top, 22)
 
                 VStack(alignment: .leading, spacing: 6) {
                     Text("Morning's Riddle")
                         .font(.headline)
                         .fontWeight(.semibold)
+                        .foregroundStyle(AppColors.deepPurple)
 
                     Text("A fresh riddle to start your day")
                         .font(.subheadline)
@@ -180,31 +206,44 @@ struct TonightRiddleCard: View {
     var body: some View {
         RiddleCard {
             HStack(alignment: .top, spacing: 16) {
-                Image(systemName: isUnlocked ? "moon.stars.fill" : "lock.fill")
+                Image(systemName: "moon.stars.fill")
                     .font(.system(size: 40))
-                    .foregroundStyle(isUnlocked ? Color(hex: "48367C") : AppColors.darkRed)
+                    .foregroundStyle(Color(hex: "48367C"))
 
                 VStack(alignment: .leading, spacing: 6) {
                     Text("Tonight's Riddle")
                         .font(.headline)
                         .fontWeight(.semibold)
+                        .foregroundStyle(AppColors.deepPurple)
 
-                    Text(isUnlocked ? "A riddle to end your day" : "Unlocks at 6 PM")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-
-                    Button(action: onStart) {
-                        Text(isUnlocked ? "Start Night Riddle" : "Locked until 6 PM")
+                    if !isUnlocked {
+                        Text("Unlocks at 6 PM")
                             .font(.subheadline)
-                            .fontWeight(.semibold)
-                            .foregroundStyle(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 12)
-                            .background(isUnlocked ? Color(hex: "48367C") : AppColors.darkRed)
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                            .foregroundStyle(.secondary)
                     }
-                    .disabled(!isUnlocked)
-                    .padding(.top, 6)
+
+                    if isUnlocked {
+                        Button(action: onStart) {
+                            Text("Start Night Riddle")
+                                .font(.subheadline)
+                                .fontWeight(.semibold)
+                                .foregroundStyle(.white)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 12)
+                                .background(Color(hex: "48367C"))
+                                .clipShape(RoundedRectangle(cornerRadius: 12))
+                        }
+                        .padding(.top, 6)
+                    }
+                }
+
+                Spacer()
+
+                if !isUnlocked {
+                    Image(systemName: "lock.fill")
+                        .font(.system(size: 38))
+                        .foregroundStyle(AppColors.darkRed)
+                        .padding(.trailing, 18)
                 }
             }
         }
@@ -225,6 +264,7 @@ struct StreakCard: View {
                         Text("Your Streak")
                             .font(.headline)
                             .fontWeight(.semibold)
+                            .foregroundStyle(AppColors.deepPurple)
                         Text("Keep it going!")
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
