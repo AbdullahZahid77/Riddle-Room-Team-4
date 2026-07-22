@@ -119,19 +119,25 @@ class UserData: ObservableObject {
         return streak
     }
 
-    // True for each Mon–Sun day of the current week where both riddles are done.
-    var thisWeekCompletion: [Bool] {
+    // Completion count for each Mon-Sun day of the current week: 0, 1, or 2 riddles done.
+    var thisWeekRiddleCompletionCounts: [Int] {
         let calendar = Calendar.current
         let today = Date()
         let weekday = calendar.component(.weekday, from: today)  // 1=Sun...7=Sat
         let daysFromMonday = (weekday + 5) % 7                   // 0=Mon...6=Sun
 
         return (0..<7).map { i in
-            guard i <= daysFromMonday else { return false }       // future days = not done
+            guard i <= daysFromMonday else { return 0 }           // future days = not done
             let offset = i - daysFromMonday
             let date = calendar.date(byAdding: .day, value: offset, to: today) ?? today
-            return progress[formatter.string(from: date)]?.bothDone ?? false
+            let day = progress[formatter.string(from: date)] ?? DayProgress()
+            return (day.dayRiddleDone ? 1 : 0) + (day.nightRiddleDone ? 1 : 0)
         }
+    }
+
+    // True for each Mon-Sun day of the current week where both riddles are done.
+    var thisWeekCompletion: [Bool] {
+        thisWeekRiddleCompletionCounts.map { $0 == 2 }
     }
 
     // MARK: - Dev reset

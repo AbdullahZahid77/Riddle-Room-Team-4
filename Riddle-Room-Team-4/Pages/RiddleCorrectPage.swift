@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 struct RiddleCorrectPage: View {
     let riddle: Riddle
@@ -7,6 +8,13 @@ struct RiddleCorrectPage: View {
     let onBack: () -> Void
     let onNext: () -> Void
     @Environment(\.appFontScale) var fontScale
+
+    private var happyImage: UIImage? {
+        guard let url = Bundle.main.url(forResource: "happy", withExtension: "png") else {
+            return nil
+        }
+        return UIImage(contentsOfFile: url.path)
+    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -26,9 +34,12 @@ struct RiddleCorrectPage: View {
                     .frame(width: 66, height: 66)
                     .background(Circle().fill(AppColors.green))
 
-                Image(systemName: "brain.head.profile")
-                    .font(.system(size: 112 * fontScale, weight: .light))
-                    .foregroundStyle(AppColors.orange)
+                if let happyImage {
+                    Image(uiImage: happyImage)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 126 * fontScale)
+                }
 
                 Text("Great job!")
                     .font(.system(size: 28 * fontScale, weight: .bold))

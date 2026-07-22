@@ -42,12 +42,16 @@ struct HomeView: View {
                     VStack(alignment: .leading, spacing: 16) {
                         GreetingSection(username: userData.username)
                         GroupRiddleImage()
-                        TodayRiddleCard(onStart: { activeSlot = .day })
+                        TodayRiddleCard(
+                            isCompleted: userData.dayProgress().dayRiddleDone,
+                            onStart: { activeSlot = .day }
+                        )
                         TimelineView(.periodic(from: .now, by: 60)) { context in
                             let isNightRiddleUnlocked = Self.isNightRiddleUnlocked(at: context.date)
 
                             TonightRiddleCard(
                                 isUnlocked: isNightRiddleUnlocked,
+                                isCompleted: userData.dayProgress().nightRiddleDone,
                                 onStart: { activeSlot = .night }
                             )
                         }
@@ -58,7 +62,17 @@ struct HomeView: View {
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color(hex: "F1E4D5").ignoresSafeArea())
+            .background(
+                LinearGradient(
+                    colors: [
+                        Color(hex: "F1E4D5"),
+                        Color(hex: "DCC7AE")
+                    ],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+                .ignoresSafeArea()
+            )
             .fullScreenCover(item: $activeSlot) { slot in
                 RiddleFlowView(slot: slot, onDismiss: { activeSlot = nil })
                     .environmentObject(userData)
@@ -94,21 +108,12 @@ struct TopBarView: View {
 
             Spacer()
 
-            HStack(spacing: 18) {
-                Button {
-                    isDarkMode.toggle()
-                } label: {
-                    Image(systemName: isDarkMode ? "sun.max.fill" : "moon.fill")
-                        .font(.title2)
-                        .foregroundStyle(Color(hex: "48367C"))
-                }
-
-                Button {
-                } label: {
-                    Image(systemName: "bell")
-                        .font(.title2)
-                        .foregroundStyle(Color(hex: "48367C"))
-                }
+            Button {
+                isDarkMode.toggle()
+            } label: {
+                Image(systemName: isDarkMode ? "sun.max.fill" : "moon.fill")
+                    .font(.title2)
+                    .foregroundStyle(Color(hex: "48367C"))
             }
         }
     }
@@ -161,6 +166,7 @@ struct GroupRiddleImage: View {
 
 // MARK: - Morning's Riddle Card
 struct TodayRiddleCard: View {
+    let isCompleted: Bool
     let onStart: () -> Void
 
     var body: some View {
@@ -181,8 +187,12 @@ struct TodayRiddleCard: View {
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
 
-                    Button(action: onStart) {
-                        Text("Start Riddle")
+                    Button {
+                        if !isCompleted {
+                            onStart()
+                        }
+                    } label: {
+                        Text(isCompleted ? "Completed" : "Start Riddle")
                             .font(.subheadline)
                             .fontWeight(.semibold)
                             .foregroundStyle(.white)
@@ -201,6 +211,7 @@ struct TodayRiddleCard: View {
 // MARK: - Tonight's Riddle Card
 struct TonightRiddleCard: View {
     let isUnlocked: Bool
+    let isCompleted: Bool
     let onStart: () -> Void
 
     var body: some View {
@@ -217,14 +228,18 @@ struct TonightRiddleCard: View {
                         .foregroundStyle(AppColors.deepPurple)
 
                     if !isUnlocked {
-                        Text("Unlocks at 6 PM")
+                        Text("Unlocks at 5 PM")
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                     }
 
                     if isUnlocked {
-                        Button(action: onStart) {
-                            Text("Start Night Riddle")
+                        Button {
+                            if !isCompleted {
+                                onStart()
+                            }
+                        } label: {
+                            Text(isCompleted ? "Completed" : "Start Night Riddle")
                                 .font(.subheadline)
                                 .fontWeight(.semibold)
                                 .foregroundStyle(.white)
@@ -240,9 +255,10 @@ struct TonightRiddleCard: View {
                 Spacer()
 
                 if !isUnlocked {
-                    Image(systemName: "lock.fill")
+                    Image(systemName: "lock")
                         .font(.system(size: 38))
-                        .foregroundStyle(AppColors.darkRed)
+                        .foregroundStyle(AppColors.deepPurple)
+                        .scaleEffect(x: 1.12, y: 1.0)
                         .padding(.trailing, 18)
                 }
             }
@@ -279,20 +295,15 @@ struct StreakCard: View {
                 }
 
                 HStack(spacing: 0) {
-                    let completion = userData.thisWeekCompletion
+                    let completionCounts = userData.thisWeekRiddleCompletionCounts
                     ForEach(Array(weekDayLabels.enumerated()), id: \.offset) { index, day in
                         VStack(spacing: 5) {
-                            Circle()
-                                .fill(completion[index] ? Color(hex: "48367C") : Color(.systemGray5))
-                                .frame(width: 30, height: 30)
-                                .overlay {
-                                    if completion[index] {
-                                        Image(systemName: "checkmark")
-                                            .font(.caption2)
-                                            .fontWeight(.bold)
-                                            .foregroundStyle(.white)
-                                    }
-                                }
+                            RiddleCompletionCircle(
+                                completedCount: completionCounts[index],
+                                fillColor: Color(hex: "48367C"),
+                                emptyColor: Color(.systemGray5),
+                                checkColor: .white
+                            )
                             Text(day)
                                 .font(.caption2)
                                 .foregroundStyle(.secondary)
@@ -302,6 +313,40 @@ struct StreakCard: View {
                 }
             }
         }
+    }
+}
+
+// MARK: - Completion Circle
+struct RiddleCompletionCircle: View {
+    let completedCount: Int
+    let fillColor: Color
+    let emptyColor: Color
+    let checkColor: Color
+
+    var body: some View {
+        ZStack {
+            Circle()
+                .fill(emptyColor)
+
+            if completedCount == 1 {
+                HStack(spacing: 0) {
+                    Rectangle()
+                        .fill(fillColor)
+                    Rectangle()
+                        .fill(.clear)
+                }
+                .clipShape(Circle())
+            } else if completedCount >= 2 {
+                Circle()
+                    .fill(fillColor)
+
+                Image(systemName: "checkmark")
+                    .font(.caption2)
+                    .fontWeight(.bold)
+                    .foregroundStyle(checkColor)
+            }
+        }
+        .frame(width: 30, height: 30)
     }
 }
 
