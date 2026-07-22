@@ -30,10 +30,6 @@ struct ContentView: View {
                             Label("Brain Circle", systemImage: "brain.head.profile")
                         }
 
-                    NotesPage()
-                        .tabItem {
-                            Label("Notes", systemImage: "note.text")
-                        }
                 }
             }
         }
