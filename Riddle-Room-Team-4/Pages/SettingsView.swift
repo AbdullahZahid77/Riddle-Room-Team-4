@@ -58,7 +58,7 @@ struct SettingsView: View {
                                         .foregroundStyle(AppColors.ink)
                                     Text("Coming soon")
                                         .font(.system(size: 12 * fontScale, weight: .medium))
-                                        .foregroundStyle(AppColors.ink.opacity(0.38))
+                                        .foregroundStyle(AppColors.ink.opacity(0.45))
                                 }
                                 Spacer()
                                 Toggle("", isOn: Binding(
@@ -82,19 +82,19 @@ struct SettingsView: View {
                                     Spacer()
                                     Text("Coming soon")
                                         .font(.system(size: 12 * fontScale, weight: .medium))
-                                        .foregroundStyle(AppColors.ink.opacity(0.38))
+                                        .foregroundStyle(AppColors.ink.opacity(0.45))
                                 }
                                 HStack(spacing: 10) {
                                     Image(systemName: "speaker.fill")
                                         .font(.caption.weight(.semibold))
-                                        .foregroundStyle(AppColors.ink.opacity(0.38))
+                                        .foregroundStyle(AppColors.ink.opacity(0.45))
                                     Slider(value: $userData.sfxVolume, in: 0...1)
                                         .tint(AppColors.purple)
                                         .disabled(true)
                                         .opacity(0.45)
                                     Image(systemName: "speaker.wave.3.fill")
                                         .font(.caption.weight(.semibold))
-                                        .foregroundStyle(AppColors.ink.opacity(0.38))
+                                        .foregroundStyle(AppColors.ink.opacity(0.45))
                                 }
                             }
                         }
@@ -185,7 +185,7 @@ struct SettingsView: View {
                 .padding(.bottom, 36)
             }
         }
-        .background(Color(hex: "F1E4D5").ignoresSafeArea())
+        .background(AppColors.background.ignoresSafeArea())
         .alert("Reset App Data", isPresented: $showingResetAlert) {
             Button("Reset", role: .destructive) {
                 userData.resetAll()
@@ -234,7 +234,7 @@ private struct SettingsCard<Content: View>: View {
         content()
             .padding(16)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(Color(hex: "FFF7ED"))
+            .background(AppColors.panel)
             .clipShape(RoundedRectangle(cornerRadius: 16))
     }
 }

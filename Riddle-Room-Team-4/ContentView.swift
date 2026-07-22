@@ -33,7 +33,6 @@ struct ContentView: View {
                 }
             }
         }
-        .preferredColorScheme(isDarkMode ? .dark : .light)
         .dynamicTypeSize(userData.dynamicTypeSize)
         .environment(\.appFontScale, CGFloat(userData.fontScale))
     }

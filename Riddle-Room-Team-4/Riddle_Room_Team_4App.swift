@@ -11,6 +11,7 @@ import SwiftData
 @main
 struct Riddle_Room_Team_4App: App {
     @StateObject private var userData = UserData()
+    @AppStorage("isDarkMode") private var isDarkMode = false
 
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
@@ -29,7 +30,7 @@ struct Riddle_Room_Team_4App: App {
         WindowGroup {
             ContentView()
                 .environmentObject(userData)
-                .preferredColorScheme(.light)
+                .preferredColorScheme(isDarkMode ? .dark : .light)
         }
         .modelContainer(sharedModelContainer)
     }
