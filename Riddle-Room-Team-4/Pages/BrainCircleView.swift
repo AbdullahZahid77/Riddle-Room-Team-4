@@ -1,302 +1,224 @@
-//
-//  BrainCircleView.swift
-//  Riddle-Room-Team-4
-//
-//  Brain Circle / Friends page.
-//
-
 import SwiftUI
 import UIKit
 
+// Small wrapper so String is Identifiable for fullScreenCover(item:)
+private struct CircleIDItem: Identifiable {
+    let id: String
+}
+
 struct BrainCircleView: View {
-    @State private var isShowingCircleCode = false
+    @EnvironmentObject var userData: UserData
+    @StateObject private var manager = BrainCircleManager()
     @Environment(\.appFontScale) var fontScale
 
-    private let circleCode = "ABX7GQ9"
+    @State private var showingStart = false
+    @State private var showingJoin  = false
+    @State private var selectedCircleId: CircleIDItem? = nil
 
     var body: some View {
         Group {
-            if isShowingCircleCode {
-                CircleReadyView(
-                    circleCode: circleCode,
-                    onBack: { isShowingCircleCode = false }
-                )
+            if manager.joinedCircles.isEmpty {
+                firstTimeView
             } else {
-                startJoinView
+                circleListView
             }
         }
-        .animation(.easeInOut, value: isShowingCircleCode)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(AppColors.background.ignoresSafeArea())
+        .sheet(isPresented: $showingStart) {
+            StartCircleView(manager: manager, username: userData.username)
+                .onDisappear {
+                    // Open detail of newly created circle
+                    if let last = manager.joinedCircles.last {
+                        selectedCircleId = CircleIDItem(id: last.id)
+                    }
+                }
+        }
+        .sheet(isPresented: $showingJoin) {
+            JoinCircleView(manager: manager, username: userData.username) { joined in
+                selectedCircleId = CircleIDItem(id: joined.id)
+            }
+        }
+        .fullScreenCover(item: $selectedCircleId) { item in
+            CircleDetailView(circleId: item.id, manager: manager)
+                .environmentObject(userData)
+        }
     }
 
-    private var startJoinView: some View {
-        VStack(spacing: 28) {
-            header
+    // MARK: - First-time screen
 
-            VStack(spacing: 18) {
-                circleOption(
+    private var firstTimeView: some View {
+        VStack(spacing: 0) {
+            // Header
+            VStack(spacing: 6) {
+                Text("Brain Circle")
+                    .font(.system(size: 30 * fontScale, weight: .bold))
+                    .foregroundStyle(AppColors.ink)
+                Text("Stay connected with your friends and family\nwhile exercising your brain together.")
+                    .font(.system(size: 15 * fontScale, weight: .semibold))
+                    .multilineTextAlignment(.center)
+                    .foregroundStyle(AppColors.ink.opacity(0.65))
+                    .lineSpacing(5)
+            }
+            .padding(.top, 48)
+            .padding(.horizontal, 28)
+
+            Image("group")
+                .resizable()
+                .scaledToFit()
+                .frame(maxWidth: .infinity)
+                .frame(height: 200)
+                .padding(.top, 24)
+
+            VStack(spacing: 14) {
+                actionCard(
                     title: "Start a Circle",
-                    subtitle: "Create a new Brain Circle\nand invite others.",
-                    action: { isShowingCircleCode = true }
+                    subtitle: "Create a new Brain Circle and invite others.",
+                    icon: "person.3.fill",
+                    action: { showingStart = true }
                 )
-
-                circleOption(
+                actionCard(
                     title: "Join a Circle",
-                    subtitle: "Enter a code to join an\nexisting Circle.",
-                    action: { }
+                    subtitle: "Enter a code to join an existing Brain Circle.",
+                    icon: "arrow.right.circle.fill",
+                    action: { showingJoin = true }
                 )
             }
+            .padding(.horizontal, 24)
+            .padding(.top, 28)
 
             Spacer()
         }
-        .padding(.horizontal, 28)
-        .padding(.top, 32)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color(.systemBackground).ignoresSafeArea())
     }
 
-    private var header: some View {
-        VStack(spacing: 18) {
+    // MARK: - Circle list screen
+
+    private var circleListView: some View {
+        VStack(spacing: 0) {
+            // Top bar
             HStack {
-                Button {
-                } label: {
-                    Image(systemName: "line.3.horizontal")
-                        .font(.title2)
-                        .foregroundStyle(.indigo)
-                }
-
-                Spacer()
-
-                Button {
-                } label: {
-                    Image(systemName: "bell")
-                        .font(.title2)
-                        .foregroundStyle(.indigo)
-                }
-            }
-
-            VStack(spacing: 14) {
                 Text("Brain Circle")
-                    .font(.system(size: 30 * fontScale, weight: .bold))
-                    .foregroundStyle(.indigo)
+                    .font(.system(size: 24 * fontScale, weight: .bold))
+                    .foregroundStyle(AppColors.ink)
+                Spacer()
+                Button { showingJoin = true } label: {
+                    Image(systemName: "person.badge.plus")
+                        .font(.title2)
+                        .foregroundStyle(AppColors.purple)
+                }
+                Button { showingStart = true } label: {
+                    Image(systemName: "plus.circle.fill")
+                        .font(.title2)
+                        .foregroundStyle(AppColors.purple)
+                }
+                .padding(.leading, 12)
+            }
+            .padding(.horizontal, 24)
+            .padding(.top, 20)
+            .padding(.bottom, 14)
 
-                Text("Stay connected with your\nfriends and family while\nexercising your brain together.")
-                    .font(.system(size: 19 * fontScale, weight: .semibold))
-                    .multilineTextAlignment(.center)
-                    .lineSpacing(8)
-                    .foregroundStyle(.indigo)
+            ScrollView(showsIndicators: false) {
+                VStack(spacing: 12) {
+                    ForEach(manager.joinedCircles) { circle in
+                        circleRow(circle)
+                    }
+                }
+                .padding(.horizontal, 20)
+                .padding(.bottom, 24)
             }
         }
     }
 
-    private func circleOption(title: String, subtitle: String, action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            HStack(spacing: 20) {
-                Image(systemName: "person.3")
-                    .font(.system(size: 42 * fontScale))
-                    .foregroundStyle(.indigo)
-                    .frame(width: 64)
-
-                VStack(alignment: .leading, spacing: 8) {
-                    Text(title)
-                        .font(.system(size: 22 * fontScale, weight: .bold))
-
-                    Text(subtitle)
-                        .font(.system(size: 15 * fontScale, weight: .semibold))
-                        .lineSpacing(6)
+    private func circleRow(_ circle: BrainCircle) -> some View {
+        Button {
+            selectedCircleId = CircleIDItem(id: circle.id)
+        } label: {
+            HStack(spacing: 16) {
+                ZStack {
+                    Circle()
+                        .fill(AppColors.purple.opacity(0.12))
+                        .frame(width: 48, height: 48)
+                    Image(systemName: "person.3.fill")
+                        .font(.system(size: 18, weight: .semibold))
+                        .foregroundStyle(AppColors.purple)
                 }
-                .foregroundStyle(.indigo)
+
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(circle.familyName)
+                        .font(.system(size: 16 * fontScale, weight: .bold))
+                        .foregroundStyle(AppColors.ink)
+                    Text(statusText(for: circle))
+                        .font(.system(size: 13 * fontScale, weight: .semibold))
+                        .foregroundStyle(statusColor(for: circle))
+                }
 
                 Spacer()
 
                 Image(systemName: "chevron.right")
-                    .font(.title2.weight(.semibold))
-                    .foregroundStyle(.indigo)
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundStyle(AppColors.ink.opacity(0.35))
             }
-            .padding(.horizontal, 22)
-            .padding(.vertical, 24)
-            .frame(maxWidth: .infinity)
-            .background(
-                RoundedRectangle(cornerRadius: 16)
-                    .fill(Color(.systemBackground))
-                    .shadow(color: .black.opacity(0.08), radius: 4, x: 0, y: 2)
-            )
-            .overlay(
-                RoundedRectangle(cornerRadius: 16)
-                    .stroke(Color.indigo.opacity(0.12), lineWidth: 1)
-            )
+            .padding(16)
+            .background(RoundedRectangle(cornerRadius: 14).fill(AppColors.panel))
+            .overlay(RoundedRectangle(cornerRadius: 14).stroke(AppColors.ink.opacity(0.08), lineWidth: 1))
+        }
+        .buttonStyle(.plain)
+    }
+
+    private func statusText(for circle: BrainCircle) -> String {
+        if circle.finalResult == true  { return "Solved! ✓" }
+        if circle.finalResult == false { return "Guessed — try again" }
+        if circle.allMembersCompleted  { return "Ready to guess the final word!" }
+        return "\(circle.completedCount) of \(circle.members.count) members done"
+    }
+
+    private func statusColor(for circle: BrainCircle) -> Color {
+        if circle.finalResult == true  { return AppColors.green }
+        if circle.allMembersCompleted  { return AppColors.orange }
+        return AppColors.ink.opacity(0.5)
+    }
+
+    // MARK: - Reusable card
+
+    private func actionCard(title: String, subtitle: String, icon: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            HStack(spacing: 18) {
+                ZStack {
+                    Circle()
+                        .fill(AppColors.purple.opacity(0.12))
+                        .frame(width: 56, height: 56)
+                    Image(systemName: icon)
+                        .font(.system(size: 22, weight: .semibold))
+                        .foregroundStyle(AppColors.purple)
+                }
+
+                VStack(alignment: .leading, spacing: 5) {
+                    Text(title)
+                        .font(.system(size: 18 * fontScale, weight: .bold))
+                        .foregroundStyle(AppColors.ink)
+                    Text(subtitle)
+                        .font(.system(size: 13 * fontScale, weight: .semibold))
+                        .foregroundStyle(AppColors.ink.opacity(0.60))
+                        .lineSpacing(4)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+
+                Spacer()
+
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundStyle(AppColors.ink.opacity(0.35))
+            }
+            .padding(.horizontal, 20)
+            .padding(.vertical, 20)
+            .background(RoundedRectangle(cornerRadius: 16).fill(AppColors.panel))
+            .overlay(RoundedRectangle(cornerRadius: 16).stroke(AppColors.ink.opacity(0.08), lineWidth: 1))
         }
         .buttonStyle(.plain)
     }
 }
 
-private struct CircleReadyView: View {
-    let circleCode: String
-    let onBack: () -> Void
-    @Environment(\.appFontScale) var fontScale
-
-    var body: some View {
-        VStack(spacing: 0) {
-            topBar
-
-            ScrollView(showsIndicators: false) {
-                VStack(spacing: 26) {
-                    Image(systemName: "party.popper.fill")
-                        .font(.system(size: 54 * fontScale))
-                        .foregroundStyle(.orange)
-                        .padding(.top, 8)
-
-                    Text("Your Brain Circle\nis ready!")
-                        .font(.system(size: 34 * fontScale, weight: .bold))
-                        .multilineTextAlignment(.center)
-                        .lineSpacing(10)
-                        .foregroundStyle(.indigo)
-
-                    brainDoorIllustration
-                        .padding(.vertical, 4)
-
-                    Text("Share this code with your\nfamily and friends.")
-                        .font(.system(size: 24 * fontScale, weight: .bold))
-                        .multilineTextAlignment(.center)
-                        .lineSpacing(8)
-                        .foregroundStyle(.indigo.opacity(0.75))
-
-                    codeCard
-
-                    ShareLink(item: "Join my Brain Circle with code: \(circleCode)") {
-                        Label("Share Code", systemImage: "square.and.arrow.up")
-                            .font(.system(size: 22 * fontScale, weight: .bold))
-                            .foregroundStyle(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 18)
-                            .background(Color.indigo)
-                            .clipShape(RoundedRectangle(cornerRadius: 16))
-                    }
-
-                    Text("This code will never expire.")
-                        .font(.system(size: 21 * fontScale, weight: .bold))
-                        .foregroundStyle(.indigo.opacity(0.75))
-                        .padding(.top, 20)
-                }
-                .padding(.horizontal, 28)
-                .padding(.bottom, 32)
-            }
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color(.systemBackground).ignoresSafeArea())
-    }
-
-    private var topBar: some View {
-        HStack {
-            Button(action: onBack) {
-                Image(systemName: "chevron.left")
-                    .font(.system(size: 30 * fontScale, weight: .bold))
-                    .foregroundStyle(.indigo)
-            }
-
-            Spacer()
-
-            Button {
-            } label: {
-                Image(systemName: "lightbulb")
-                    .font(.system(size: 30 * fontScale, weight: .semibold))
-                    .foregroundStyle(.indigo)
-            }
-        }
-        .padding(.horizontal, 28)
-        .padding(.top, 28)
-        .padding(.bottom, 12)
-    }
-
-    private var brainDoorIllustration: some View {
-        ZStack {
-            ForEach(0..<10) { index in
-                SparkleDot(index: index)
-            }
-
-            Image(systemName: "door.left.hand.open")
-                .font(.system(size: 126 * fontScale))
-                .foregroundStyle(.purple)
-                .offset(x: -18)
-
-            Image(systemName: "brain.head.profile")
-                .font(.system(size: 76 * fontScale))
-                .foregroundStyle(.pink)
-                .offset(x: 32, y: 8)
-        }
-        .frame(height: 210)
-        .frame(maxWidth: .infinity)
-    }
-
-    private var codeCard: some View {
-        VStack(spacing: 6) {
-            Text("Circle Code")
-                .font(.system(size: 18 * fontScale, weight: .bold))
-                .foregroundStyle(.indigo.opacity(0.7))
-
-            HStack(spacing: 18) {
-                Spacer()
-
-                Text(circleCode)
-                    .font(.system(size: 42 * fontScale, weight: .heavy, design: .rounded))
-                    .foregroundStyle(.indigo)
-                    .minimumScaleFactor(0.7)
-
-                Button {
-                    UIPasteboard.general.string = circleCode
-                } label: {
-                    Image(systemName: "doc.on.doc")
-                        .font(.system(size: 30 * fontScale, weight: .bold))
-                        .foregroundStyle(.indigo)
-                        .frame(width: 48, height: 48)
-                }
-            }
-        }
-        .padding(.horizontal, 22)
-        .padding(.vertical, 16)
-        .frame(maxWidth: .infinity)
-        .background(Color(.systemBackground))
-        .overlay(
-            RoundedRectangle(cornerRadius: 16)
-                .stroke(Color.indigo.opacity(0.12), lineWidth: 2)
-        )
-        .clipShape(RoundedRectangle(cornerRadius: 16))
-    }
-}
-
-private struct SparkleDot: View {
-    let index: Int
-
-    private var color: Color {
-        index.isMultiple(of: 2) ? .orange : .purple.opacity(0.45)
-    }
-
-    private var size: CGFloat {
-        [8, 5, 7, 10, 4, 6, 9, 5, 7, 4][index]
-    }
-
-    private var offset: CGSize {
-        [
-            CGSize(width: -125, height: -56),
-            CGSize(width: 112, height: -68),
-            CGSize(width: -94, height: 48),
-            CGSize(width: 124, height: 44),
-            CGSize(width: -40, height: -86),
-            CGSize(width: 74, height: 82),
-            CGSize(width: 8, height: -96),
-            CGSize(width: -132, height: 14),
-            CGSize(width: 136, height: -2),
-            CGSize(width: 46, height: -108)
-        ][index]
-    }
-
-    var body: some View {
-        Circle()
-            .fill(color)
-            .frame(width: size, height: size)
-            .offset(offset)
-    }
-}
-
 #Preview {
     BrainCircleView()
+        .environmentObject(UserData())
 }
