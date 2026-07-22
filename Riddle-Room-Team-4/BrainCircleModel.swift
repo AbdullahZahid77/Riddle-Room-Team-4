@@ -207,12 +207,15 @@ class BrainCircleManager: ObservableObject {
         return joinedCircles.last
     }
 
-    // Creates a brand new circle, adds it to joined list, returns the circle
-    func createCircle(familyName: String, username: String) -> BrainCircle {
-        let code = Self.generateCode()
+    // Generates a preview code without committing anything to joinedCircles
+    static func previewCode() -> String { generateCode() }
+
+    // Creates a brand new circle with a given code, adds it to joined list, returns the circle
+    func commitCircle(code: String, familyName: String, username: String) -> BrainCircle {
+        let name = familyName.trimmingCharacters(in: .whitespaces)
         let circle = BrainCircle(
             id: code,
-            familyName: familyName.trimmingCharacters(in: .whitespaces).isEmpty ? "My Family" : familyName.trimmingCharacters(in: .whitespaces),
+            familyName: name.isEmpty ? "My Family" : name,
             members: [
                 CircleMember(name: username.isEmpty ? "You" : username, hasCompleted: false, submittedAnswer: "", memberRiddleIndex: 0)
             ],

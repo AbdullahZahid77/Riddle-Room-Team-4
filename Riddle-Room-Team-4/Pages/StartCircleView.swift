@@ -4,12 +4,13 @@ import UIKit
 struct StartCircleView: View {
     @ObservedObject var manager: BrainCircleManager
     let username: String
+    let onOpenCircle: (BrainCircle) -> Void
 
     @Environment(\.dismiss) var dismiss
     @Environment(\.appFontScale) var fontScale
 
     @State private var familyName: String = ""
-    @State private var generatedCode: String = ""
+    @State private var previewCode: String = ""
     @State private var step: Step = .naming
     @State private var didCopy = false
 
@@ -89,8 +90,8 @@ struct StartCircleView: View {
             Spacer()
 
             Button {
-                let circle = manager.createCircle(familyName: familyName, username: username)
-                generatedCode = circle.id
+                // Generate code for preview only — circle not committed yet
+                previewCode = BrainCircleManager.previewCode()
                 step = .ready
             } label: {
                 Text("Create Circle")
@@ -114,98 +115,93 @@ struct StartCircleView: View {
     // MARK: - Ready step
 
     private var readyView: some View {
-        ScrollView(showsIndicators: false) {
-            VStack(spacing: 28) {
-                Text("is ready!")
-                    .font(.system(size: 28 * fontScale, weight: .bold))
-                    .foregroundStyle(AppColors.ink)
-                    .multilineTextAlignment(.center)
-                    .padding(.top, 8)
-
-                Image("happy")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(height: 160)
-
-                Text("Share this code with your\nfamily and friends.")
-                    .font(.system(size: 17 * fontScale, weight: .semibold))
-                    .foregroundStyle(AppColors.ink.opacity(0.70))
-                    .multilineTextAlignment(.center)
-                    .lineSpacing(6)
-
-                // Code card
-                VStack(spacing: 8) {
-                    Text("Circle Code")
-                        .font(.system(size: 13 * fontScale, weight: .bold))
-                        .foregroundStyle(AppColors.ink.opacity(0.55))
-                    HStack(spacing: 16) {
-                        Spacer()
-                        Text(generatedCode)
-                            .font(.system(size: 38 * fontScale, weight: .heavy, design: .rounded))
-                            .foregroundStyle(AppColors.purple)
-                            .minimumScaleFactor(0.7)
-                        Button {
-                            UIPasteboard.general.string = generatedCode
-                            didCopy = true
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) { didCopy = false }
-                        } label: {
-                            Image(systemName: didCopy ? "checkmark.circle.fill" : "doc.on.doc")
-                                .font(.system(size: 22, weight: .semibold))
-                                .foregroundStyle(didCopy ? AppColors.green : AppColors.purple)
-                                .frame(width: 44, height: 44)
-                        }
-                    }
-                    Text("This code will never expire.")
-                        .font(.system(size: 12 * fontScale, weight: .medium))
-                        .foregroundStyle(AppColors.ink.opacity(0.45))
-                }
-                .padding(.horizontal, 20)
-                .padding(.vertical, 18)
-                .background(RoundedRectangle(cornerRadius: 16).fill(AppColors.panel))
-                .overlay(RoundedRectangle(cornerRadius: 16).stroke(AppColors.purple.opacity(0.15), lineWidth: 1.5))
-                .padding(.horizontal, 4)
-
-                // Share button
-                ShareLink(item: "Join my Brain Circle on Riddle Room!\nUse code: \(generatedCode)") {
-                    Label("Share Code", systemImage: "square.and.arrow.up")
-                        .font(.system(size: 17 * fontScale, weight: .bold))
-                        .foregroundStyle(.white)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 54)
-                        .background(RoundedRectangle(cornerRadius: 12).fill(AppColors.purple))
-                }
-
-                // How it works
-                VStack(alignment: .leading, spacing: 10) {
-                    Text("How it works")
-                        .font(.system(size: 14 * fontScale, weight: .bold))
+        VStack(spacing: 0) {
+            ScrollView(showsIndicators: false) {
+                VStack(spacing: 24) {
+                    Text("is ready!")
+                        .font(.system(size: 28 * fontScale, weight: .bold))
                         .foregroundStyle(AppColors.ink)
-                    Text("Anyone with this code can join your Brain Circle. Each member gets their own riddle clue to solve. Once everyone is done, you all guess the final answer together!")
-                        .font(.system(size: 13 * fontScale, weight: .semibold))
-                        .foregroundStyle(AppColors.ink.opacity(0.60))
-                        .lineSpacing(5)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-                .padding(16)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .background(RoundedRectangle(cornerRadius: 14).fill(AppColors.panel))
+                        .multilineTextAlignment(.center)
+                        .padding(.top, 8)
 
-                Button {
-                    dismiss()
-                } label: {
-                    Text("Done")
-                        .font(.system(size: 17 * fontScale, weight: .bold))
-                        .foregroundStyle(AppColors.purple)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 54)
-                        .background(RoundedRectangle(cornerRadius: 12).fill(AppColors.purple.opacity(0.10)))
+                    Image("happy")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 140)
+
+                    Text("Share this code with your\nfamily and friends.")
+                        .font(.system(size: 17 * fontScale, weight: .semibold))
+                        .foregroundStyle(AppColors.ink.opacity(0.70))
+                        .multilineTextAlignment(.center)
+                        .lineSpacing(6)
+
+                    // Code card
+                    VStack(spacing: 8) {
+                        Text("Circle Code")
+                            .font(.system(size: 13 * fontScale, weight: .bold))
+                            .foregroundStyle(AppColors.ink.opacity(0.55))
+                        HStack(spacing: 16) {
+                            Spacer()
+                            Text(previewCode)
+                                .font(.system(size: 38 * fontScale, weight: .heavy, design: .rounded))
+                                .foregroundStyle(AppColors.purple)
+                                .minimumScaleFactor(0.7)
+                            Button {
+                                UIPasteboard.general.string = previewCode
+                                didCopy = true
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 2) { didCopy = false }
+                            } label: {
+                                Image(systemName: didCopy ? "checkmark.circle.fill" : "doc.on.doc")
+                                    .font(.system(size: 22, weight: .semibold))
+                                    .foregroundStyle(didCopy ? AppColors.green : AppColors.purple)
+                                    .frame(width: 44, height: 44)
+                            }
+                        }
+                        Text("This code will never expire.")
+                            .font(.system(size: 12 * fontScale, weight: .medium))
+                            .foregroundStyle(AppColors.ink.opacity(0.45))
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 18)
+                    .background(RoundedRectangle(cornerRadius: 16).fill(AppColors.panel))
+                    .overlay(RoundedRectangle(cornerRadius: 16).stroke(AppColors.purple.opacity(0.15), lineWidth: 1.5))
+                    .padding(.horizontal, 4)
+
+                    // Share button
+                    ShareLink(item: "Join my Brain Circle on Riddle Room!\nUse code: \(previewCode)") {
+                        Label("Share Code", systemImage: "square.and.arrow.up")
+                            .font(.system(size: 17 * fontScale, weight: .bold))
+                            .foregroundStyle(AppColors.purple)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 54)
+                            .background(RoundedRectangle(cornerRadius: 12).fill(AppColors.purple.opacity(0.10)))
+                            .overlay(RoundedRectangle(cornerRadius: 12).stroke(AppColors.purple.opacity(0.25), lineWidth: 1.5))
+                    }
                 }
-                .buttonStyle(.plain)
-                .padding(.bottom, 8)
+                .padding(.horizontal, 28)
+                .padding(.top, 8)
+                .padding(.bottom, 24)
             }
+
+            // Fixed bottom button — always visible
+            Button {
+                let circle = manager.commitCircle(code: previewCode, familyName: familyName, username: username)
+                dismiss()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
+                    onOpenCircle(circle)
+                }
+            } label: {
+                Text("Go to My Circle")
+                    .font(.system(size: 17 * fontScale, weight: .bold))
+                    .foregroundStyle(.white)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 54)
+                    .background(RoundedRectangle(cornerRadius: 12).fill(AppColors.purple))
+            }
+            .buttonStyle(.plain)
             .padding(.horizontal, 28)
-            .padding(.top, 8)
             .padding(.bottom, 32)
+            .padding(.top, 12)
         }
     }
 }

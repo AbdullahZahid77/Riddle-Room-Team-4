@@ -26,13 +26,9 @@ struct BrainCircleView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(AppColors.background.ignoresSafeArea())
         .sheet(isPresented: $showingStart) {
-            StartCircleView(manager: manager, username: userData.username)
-                .onDisappear {
-                    // Open detail of newly created circle
-                    if let last = manager.joinedCircles.last {
-                        selectedCircleId = CircleIDItem(id: last.id)
-                    }
-                }
+            StartCircleView(manager: manager, username: userData.username) { circle in
+                selectedCircleId = CircleIDItem(id: circle.id)
+            }
         }
         .sheet(isPresented: $showingJoin) {
             JoinCircleView(manager: manager, username: userData.username) { joined in
