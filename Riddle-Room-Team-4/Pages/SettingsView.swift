@@ -58,49 +58,54 @@ struct SettingsView: View {
 
                             // Music toggle
                             HStack {
-                                VStack(alignment: .leading, spacing: 3) {
-                                    Text("Background Music")
-                                        .font(.system(size: 16 * fontScale, weight: .semibold))
-                                        .foregroundStyle(textColor)
-                                    Text("Coming soon")
-                                        .font(.system(size: 12 * fontScale, weight: .medium))
-                                        .foregroundStyle(textColor.opacity(0.45))
-                                }
+                                Text("Background Music")
+                                    .font(.system(size: 16 * fontScale, weight: .semibold))
+                                    .foregroundStyle(textColor)
                                 Spacer()
                                 Toggle("", isOn: Binding(
                                     get: { !userData.isMusicMuted },
                                     set: { userData.isMusicMuted = !$0 }
                                 ))
                                 .tint(AppColors.purple)
-                                .disabled(true)
-                                .opacity(0.45)
                             }
+
+                            // Music volume slider
+                            VStack(alignment: .leading, spacing: 10) {
+                                Text("Music Volume")
+                                    .font(.system(size: 14 * fontScale, weight: .semibold))
+                                    .foregroundStyle(textColor.opacity(0.70))
+                                HStack(spacing: 10) {
+                                    Image(systemName: "music.note")
+                                        .font(.caption.weight(.semibold))
+                                        .foregroundStyle(textColor.opacity(0.45))
+                                    Slider(value: $userData.musicVolume, in: 0...1)
+                                        .tint(AppColors.purple)
+                                        .disabled(userData.isMusicMuted)
+                                        .opacity(userData.isMusicMuted ? 0.40 : 1)
+                                    Image(systemName: "music.note.list")
+                                        .font(.caption.weight(.semibold))
+                                        .foregroundStyle(textColor.opacity(0.45))
+                                }
+                            }
+                            .padding(.top, 4)
 
                             Divider()
                                 .padding(.vertical, 14)
 
                             // SFX volume
                             VStack(alignment: .leading, spacing: 10) {
-                                HStack {
-                                    Text("Sound Effects")
-                                        .font(.system(size: 16 * fontScale, weight: .semibold))
-                                        .foregroundStyle(textColor)
-                                    Spacer()
-                                    Text("Coming soon")
-                                        .font(.system(size: 12 * fontScale, weight: .medium))
-                                        .foregroundStyle(textColor.opacity(0.45))
-                                }
+                                Text("Sound Effects Volume")
+                                    .font(.system(size: 16 * fontScale, weight: .semibold))
+                                    .foregroundStyle(textColor)
                                 HStack(spacing: 10) {
                                     Image(systemName: "speaker.fill")
                                         .font(.caption.weight(.semibold))
-                                        .foregroundStyle(textColor.opacity(0.45))
+                                        .foregroundStyle(textColor.opacity(0.55))
                                     Slider(value: $userData.sfxVolume, in: 0...1)
                                         .tint(AppColors.purple)
-                                        .disabled(true)
-                                        .opacity(0.45)
                                     Image(systemName: "speaker.wave.3.fill")
                                         .font(.caption.weight(.semibold))
-                                        .foregroundStyle(textColor.opacity(0.45))
+                                        .foregroundStyle(textColor.opacity(0.55))
                                 }
                             }
                         }

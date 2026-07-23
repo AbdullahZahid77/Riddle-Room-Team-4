@@ -320,9 +320,11 @@ struct FinalGuessView: View {
         guard !trimmed.isEmpty else { return }
         let isCorrect = manager.submitFinalGuess(circleId: circle.id, guess: trimmed)
         if isCorrect {
+            SoundManager.shared.play("Correct")
             correct = true
             submitted = true
         } else {
+            SoundManager.shared.play("Incorrect")
             attempts += 1
             showWrong = true
             guess = ""

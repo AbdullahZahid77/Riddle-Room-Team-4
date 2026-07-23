@@ -38,6 +38,10 @@ class UserData: ObservableObject {
         didSet { UserDefaults.standard.set(sfxVolume, forKey: "sfxVolume") }
     }
 
+    @Published var musicVolume: Double {
+        didSet { UserDefaults.standard.set(musicVolume, forKey: "musicVolume") }
+    }
+
     // 0.8 (small) → 1.5 (large). Affects dynamicTypeSize app-wide.
     @Published var fontScale: Double {
         didSet { UserDefaults.standard.set(fontScale, forKey: "fontScale") }
@@ -66,6 +70,7 @@ class UserData: ObservableObject {
         self.isSetupComplete = UserDefaults.standard.bool(forKey: "setupComplete")
         self.isMusicMuted = UserDefaults.standard.bool(forKey: "isMusicMuted")
         self.sfxVolume = UserDefaults.standard.object(forKey: "sfxVolume") as? Double ?? 0.8
+        self.musicVolume = UserDefaults.standard.object(forKey: "musicVolume") as? Double ?? 0.5
         self.fontScale = UserDefaults.standard.object(forKey: "fontScale") as? Double ?? 1.0
         loadProgress()
     }

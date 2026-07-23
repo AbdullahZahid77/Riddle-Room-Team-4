@@ -35,6 +35,22 @@ struct ContentView: View {
         }
         .dynamicTypeSize(userData.dynamicTypeSize)
         .environment(\.appFontScale, CGFloat(userData.fontScale))
+        .onAppear {
+            SoundManager.shared.startMusic()
+            SoundManager.shared.setMusicMuted(userData.isMusicMuted)
+            SoundManager.shared.setSFXVolume(userData.sfxVolume)
+            SoundManager.shared.setMusicVolume(userData.musicVolume)
+            SoundManager.shared.installWindowTapSound()
+        }
+        .onChange(of: userData.isMusicMuted) { _, muted in
+            SoundManager.shared.setMusicMuted(muted)
+        }
+        .onChange(of: userData.sfxVolume) { _, vol in
+            SoundManager.shared.setSFXVolume(vol)
+        }
+        .onChange(of: userData.musicVolume) { _, vol in
+            SoundManager.shared.setMusicVolume(vol)
+        }
     }
 }
 

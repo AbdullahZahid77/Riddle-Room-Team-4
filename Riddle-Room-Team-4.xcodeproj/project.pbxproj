@@ -6,8 +6,13 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		B839C74D301196D900420967 /* SoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B839C74C301196D900420967 /* SoundManager.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		B839C5B0300D99C100420967 /* Riddle-Room-Team-4.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Riddle-Room-Team-4.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B839C74C301196D900420967 /* SoundManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -34,6 +39,7 @@
 			children = (
 				B839C5B2300D99C100420967 /* Riddle-Room-Team-4 */,
 				B839C5B1300D99C100420967 /* Products */,
+				B839C74C301196D900420967 /* SoundManager.swift */,
 			);
 			sourceTree = "<group>";
 		};
@@ -119,6 +125,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B839C74D301196D900420967 /* SoundManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

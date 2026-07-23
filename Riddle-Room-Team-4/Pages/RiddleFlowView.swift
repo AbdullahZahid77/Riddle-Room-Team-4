@@ -63,7 +63,10 @@ struct RiddleFlowView: View {
                     totalRiddles: 1,
                     onBack: goHome,
                     onRevealHint: {
-                        if hintsShown < maxHints { hintsShown += 1 }
+                        if hintsShown < maxHints {
+                            hintsShown += 1
+                            SoundManager.shared.play("Hint")
+                        }
                     },
                     onSubmit: evaluateAnswer
                 )
@@ -131,8 +134,10 @@ struct RiddleFlowView: View {
         let submitted = normalizeAnswer(answer)
         let correct = normalizeAnswer(currentRiddle.answer)
         if submitted == correct {
+            SoundManager.shared.play("Correct")
             step = .correct
         } else {
+            SoundManager.shared.play("Incorrect")
             attempts += 1
             step = attempts >= maxAttempts ? .reveal : .wrong
         }
